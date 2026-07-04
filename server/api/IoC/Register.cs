@@ -1,0 +1,15 @@
+﻿using Api.Validators;
+using FluentValidation;
+
+namespace Api.IoC;
+
+public static class Register
+{
+    public static IServiceCollection AddApiServices(this IServiceCollection services)
+    {
+        // FluentValidation
+        services.AddValidatorsFromAssemblyContaining<CreateSubmissionRequestValidator>();
+
+        return services;
+    }
+}
