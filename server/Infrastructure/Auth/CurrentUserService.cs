@@ -1,5 +1,6 @@
 ﻿using Application.Auth.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace Infrastructure.Auth;
@@ -18,11 +19,13 @@ public class CurrentUserService : ICurrentUserService
         get
         {
             var userIdClaim = _httpContextAccessor.HttpContext?.User
-                ?.FindFirst(ClaimTypes.NameIdentifier);
+                ?.FindFirst(JwtRegisteredClaimNames.Sub)
+                ?? _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
 
             return Guid.TryParse(userIdClaim?.Value, out var userId) ? userId : (Guid?)null;
         }
     }
 
-    public bool IsAuthenticated => throw new NotImplementedException();
+    public bool IsAuthenticated => 
+        _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
 }
