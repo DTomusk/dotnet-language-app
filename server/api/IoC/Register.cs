@@ -9,6 +9,7 @@ public static class Register
     {
         // FluentValidation
         services.AddValidatorsFromAssemblyContaining<CreateSubmissionRequestValidator>();
+        services.AddValidatorsFromAssemblyContaining<RegisterUserRequestValidator>();
 
         return services;
     }

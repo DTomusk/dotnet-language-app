@@ -1,7 +1,7 @@
 using Api.DTOs;
 using Core.Application.Commands;
 using Core.Application.Interfaces;
-using Core.Domain;
+using Core.Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
