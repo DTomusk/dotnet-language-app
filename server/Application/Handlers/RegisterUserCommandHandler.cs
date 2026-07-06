@@ -1,9 +1,9 @@
-﻿using Core.Application.Commands;
-using Core.Application.DTOs;
-using Core.Application.Interfaces;
-using Core.Domain.Entities;
+﻿using Application.Commands;
+using Application.DTOs;
+using Application.Interfaces;
+using Domain.Entities;
 
-namespace Core.Application.Handlers;
+namespace Application.Handlers;
 
 public class RegisterUserCommandHandler(
     IUserRepository userRepository,

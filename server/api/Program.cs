@@ -1,5 +1,5 @@
 using Api.IoC;
-using Core.Application.IoC;
+using Application.IoC;
 using Infrastructure.IoC;
 using Scalar.AspNetCore;
 

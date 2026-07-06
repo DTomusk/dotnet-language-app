@@ -1,8 +1,8 @@
-﻿using Core.Application.Commands;
-using Core.Application.Interfaces;
-using Core.Domain.Entities;
+﻿using Application.Commands;
+using Application.Interfaces;
+using Domain.Entities;
 
-namespace Core.Application.Handlers;
+namespace Application.Handlers;
 
 internal class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCommand, Guid>
 {

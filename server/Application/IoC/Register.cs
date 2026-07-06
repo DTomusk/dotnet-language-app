@@ -1,10 +1,10 @@
-﻿using Core.Application.Commands;
-using Core.Application.DTOs;
-using Core.Application.Handlers;
-using Core.Application.Interfaces;
+﻿using Application.Commands;
+using Application.DTOs; 
+using Application.Handlers;
+using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.Application.IoC;
+namespace Application.IoC;
 
 public static class Register
 {

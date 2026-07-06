@@ -1,4 +1,4 @@
-﻿using Core.Application.Interfaces;
+﻿using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +14,9 @@ public static class Register
         {
             options.UseNpgsql(configuration.GetConnectionString("DATABASE_URL"));
         });
+
+        services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
+
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();

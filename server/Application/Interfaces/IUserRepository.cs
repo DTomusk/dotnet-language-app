@@ -1,6 +1,6 @@
-﻿using Core.Domain.Entities;
+﻿using Domain.Entities;
 
-namespace Core.Application.Interfaces;
+namespace Application.Interfaces;
 
 public interface IUserRepository
 {

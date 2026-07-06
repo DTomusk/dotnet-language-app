@@ -1,4 +1,4 @@
-﻿using Core.Application.Interfaces;
+﻿using Application.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

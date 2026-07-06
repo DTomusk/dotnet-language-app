@@ -1,3 +1,3 @@
-﻿namespace Core.Application.Commands;
+﻿namespace Application.Commands;
 
 public record CreateSubmissionCommand(Guid UserID, string LanguageCode, string Text);
