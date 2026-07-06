@@ -1,0 +1,19 @@
+services:
+  db: 
+    image: postgres:18.1
+    container_name: language-app-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: server_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - server_db_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d server_db"]
+      interval: 10s
+      retries: 5
+
+volumes:
+  server_db_data:

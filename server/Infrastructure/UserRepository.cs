@@ -1,22 +1,34 @@
 ﻿using Core.Application.Interfaces;
 using Core.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure;
 
 public class UserRepository : IUserRepository
 {
-    public Task<User> CreateAsync(User user, CancellationToken cancellationToken = default)
+    private readonly AppDbContext _context;
+
+    public UserRepository(AppDbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task<User?> GetByDisplayNameAsync(string displayName, CancellationToken cancellationToken = default)
+    public async Task<User> CreateAsync(User user, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync(cancellationToken);
+        return user;
     }
 
-    public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<User?> GetByDisplayNameAsync(string displayName, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await _context.Users
+            .FirstOrDefaultAsync(u => u.DisplayName == displayName, cancellationToken);
+    }
+
+    public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Users
+            .FindAsync([id], cancellationToken);
     }
 }
