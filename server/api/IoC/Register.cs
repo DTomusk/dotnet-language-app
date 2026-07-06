@@ -1,4 +1,5 @@
-﻿using Api.Validators;
+﻿using Api.Auth.Validators;
+using Api.Submissions.Validators;
 using FluentValidation;
 
 namespace Api.IoC;

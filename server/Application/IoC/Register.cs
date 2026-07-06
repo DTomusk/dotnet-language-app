@@ -1,7 +1,9 @@
-﻿using Application.Commands;
-using Application.DTOs; 
-using Application.Handlers;
-using Application.Interfaces;
+﻿using Application.Auth.Commands;
+using Application.Auth.DTOs;
+using Application.Auth.Handlers;
+using Application.Shared.Interfaces;
+using Application.Submissions.Commands;
+using Application.Submissions.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.IoC;

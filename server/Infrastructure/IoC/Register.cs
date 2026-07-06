@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Auth.Interfaces;
+using Infrastructure.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
