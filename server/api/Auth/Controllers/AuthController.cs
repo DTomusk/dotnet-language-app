@@ -11,13 +11,16 @@ namespace Api.Auth.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
+    private readonly ICommandHandler<LoginUserCommand, AuthResponse> _loginHandler;
     private readonly ICommandHandler<RegisterUserCommand, AuthResponse> _registerHandler;
     private readonly IValidator<RegisterUserRequest> _registerValidator;
 
     public AuthController(
+        ICommandHandler<LoginUserCommand, AuthResponse> loginHandler,
         ICommandHandler<RegisterUserCommand, AuthResponse> registerHandler,
         IValidator<RegisterUserRequest> registerValidator)
     {
+        _loginHandler = loginHandler;
         _registerHandler = registerHandler;
         _registerValidator = registerValidator;
     }
@@ -36,6 +39,21 @@ public class AuthController : ControllerBase
         {
             var command = new RegisterUserCommand(request.DisplayName, request.Password);
             var authResponse = await _registerHandler.HandleAsync(command, cancellationToken);
+            return Ok(authResponse);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<AuthResponse>> Login(LoginUserRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var command = new LoginUserCommand(request.DisplayName, request.Password);
+            var authResponse = await _loginHandler.HandleAsync(command, cancellationToken);
             return Ok(authResponse);
         }
         catch (Exception ex)
