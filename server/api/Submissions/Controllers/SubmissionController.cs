@@ -2,6 +2,7 @@ using Api.Submissions.DTOs;
 using Application.Auth.Interfaces;
 using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
+using Application.Submissions.Queries;
 using Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -31,6 +32,13 @@ public class SubmissionController : ControllerBase
     [HttpGet(Name = "GetSubmissions")]
     public ActionResult<IEnumerable<Submission>> Get()
     {
+        if (!_currentUserService.UserId.HasValue)
+        {
+            return Unauthorized(new { Message = "User not authenticated" });
+        }
+
+        var query = new GetSubmissionsQuery(_currentUserService.UserId.Value);
+
         return Ok();
     }
 

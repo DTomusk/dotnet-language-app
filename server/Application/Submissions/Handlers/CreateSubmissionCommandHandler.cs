@@ -1,11 +1,23 @@
 ﻿using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
+using Application.Submissions.Interfaces;
 using Domain.Entities;
 
 namespace Application.Submissions.Handlers;
 
-internal class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCommand, Guid>
+public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCommand, Guid>
 {
+    private readonly ISubmissionRepository _submissionRepository;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public CreateSubmissionCommandHandler(
+        ISubmissionRepository submissionRepository,
+        IUnitOfWork unitOfWork)
+    {
+        _submissionRepository = submissionRepository;
+        _unitOfWork = unitOfWork;
+    }
+
     public async Task<Guid> HandleAsync(
         CreateSubmissionCommand command,
         CancellationToken cancellationToken = default)
@@ -21,6 +33,10 @@ internal class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmission
             LanguageCode = command.LanguageCode,
             Text = command.Text
         };
+
+        await _submissionRepository.CreateAsync(submission, cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return submission.ID;
     }

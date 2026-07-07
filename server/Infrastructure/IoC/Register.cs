@@ -1,8 +1,10 @@
 ﻿using Application.Auth.Interfaces;
 using Application.Shared.Interfaces;
+using Application.Submissions.Interfaces;
 using Infrastructure.Auth;
 using Infrastructure.Data;
 using Infrastructure.Shared;
+using Infrastructure.Submissions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +28,7 @@ public static class Register
         services.AddScoped<ITokenGenerator, JwtGenerator>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ISubmissionRepository, SubmissionRespository>();
 
         return services;
     }
