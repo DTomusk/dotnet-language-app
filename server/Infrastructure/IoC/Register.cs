@@ -1,6 +1,8 @@
 ﻿using Application.Auth.Interfaces;
+using Application.Shared.Interfaces;
 using Infrastructure.Auth;
 using Infrastructure.Data;
+using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,7 @@ public static class Register
 
         services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
