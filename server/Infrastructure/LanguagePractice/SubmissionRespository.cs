@@ -1,5 +1,5 @@
 ﻿using Application.Submissions.Interfaces;
-using Domain.Entities;
+using Domain.LanguagePractice.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

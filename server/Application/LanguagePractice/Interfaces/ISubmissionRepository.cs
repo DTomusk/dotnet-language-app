@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.LanguagePractice.Entities;
 
 namespace Application.Submissions.Interfaces;
 

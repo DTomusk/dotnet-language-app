@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities;
+﻿namespace Domain.LanguagePractice.Entities;
 
 public class Submission
 {
