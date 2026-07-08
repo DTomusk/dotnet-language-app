@@ -1,18 +1,19 @@
-﻿using Application.Shared.Interfaces;
+﻿using Application.LanguagePractice.Interfaces;
+using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
 using Application.Submissions.Interfaces;
-using Domain.Entities;
+using Domain.LanguagePractice.Entities;
 
 namespace Application.Submissions.Handlers;
 
 public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCommand, Guid>
 {
     private readonly ISubmissionRepository _submissionRepository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly ILanguagePracticeUnitOfWork _unitOfWork;
 
     public CreateSubmissionCommandHandler(
         ISubmissionRepository submissionRepository,
-        IUnitOfWork unitOfWork)
+        ILanguagePracticeUnitOfWork unitOfWork)
     {
         _submissionRepository = submissionRepository;
         _unitOfWork = unitOfWork;

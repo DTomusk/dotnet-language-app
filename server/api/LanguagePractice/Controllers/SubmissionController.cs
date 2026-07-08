@@ -4,7 +4,6 @@ using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
 using Application.Submissions.DTOs;
 using Application.Submissions.Queries;
-using Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,15 +1,15 @@
 ﻿using Application.Submissions.DTOs;
 using Application.Submissions.Interfaces;
-using Infrastructure.Data;
+using Infrastructure.LanguagePractice;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Submissions;
 
 public class SubmissionQueryService : ISubmissionQueryService
 {
-    private readonly AppDbContext _context;
+    private readonly LanguagePracticeDbContext _context;
 
-    public SubmissionQueryService(AppDbContext context)
+    public SubmissionQueryService(LanguagePracticeDbContext context)
     {
         _context = context;
     }

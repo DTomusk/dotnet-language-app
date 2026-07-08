@@ -1,19 +1,19 @@
 ﻿using Application.Shared.Interfaces;
-using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Shared;
 
-public class EfUnitOfWork : IUnitOfWork
+public class EfUnitOfWork<TContext> where TContext : DbContext
 {
-    private readonly AppDbContext _context;
+    private readonly TContext _context;
 
-    public EfUnitOfWork(AppDbContext context)
+    public EfUnitOfWork(TContext context)
     {
         _context = context;
     }
 
-    public async Task CommitAsync(CancellationToken cancellationToken)
+    public async Task<int> CommitAsync(CancellationToken cancellationToken = default)
     {
-        await _context.SaveChangesAsync(cancellationToken);
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 }

@@ -2,7 +2,7 @@
 using Application.Auth.DTOs;
 using Application.Auth.Interfaces;
 using Application.Shared.Interfaces;
-using Domain.Entities;
+using Domain.Auth.Entities;
 
 namespace Application.Auth.Handlers;
 
@@ -10,12 +10,12 @@ public class RegisterUserCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     ITokenGenerator tokenGenerator,
-    IUnitOfWork unitOfWork) : ICommandHandler<RegisterUserCommand, AuthResponse>
+    IAuthUnitOfWork unitOfWork) : ICommandHandler<RegisterUserCommand, AuthResponse>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
     private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IAuthUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<AuthResponse> HandleAsync(
         RegisterUserCommand command, 
