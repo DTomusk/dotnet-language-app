@@ -1,3 +1,3 @@
 ﻿namespace Application.Submissions.Queries;
 
-public record GetSubmissionsQuery(Guid userId);
+public record GetSubmissionsQuery(Guid UserId);
