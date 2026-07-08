@@ -19,11 +19,4 @@ public class SubmissionRespository : ISubmissionRepository
         _context.Submissions.Add(submission);
         return submission;
     }
-
-    public async Task<IEnumerable<Submission>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Submissions
-            .Where(s => s.UserID == userId)
-            .ToListAsync(cancellationToken);
-    }
 }

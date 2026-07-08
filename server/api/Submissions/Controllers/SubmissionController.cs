@@ -2,6 +2,7 @@ using Api.Submissions.DTOs;
 using Application.Auth.Interfaces;
 using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
+using Application.Submissions.DTOs;
 using Application.Submissions.Queries;
 using Domain.Entities;
 using FluentValidation;
@@ -18,19 +19,22 @@ public class SubmissionController : ControllerBase
     private readonly IValidator<CreateSubmissionRequest> _createSubmissionRequestValidator;
     private readonly ICommandHandler<CreateSubmissionCommand, Guid> _createSubmissionCommandHandler;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IQueryHandler<GetSubmissionsQuery, IEnumerable<SubmissionResponse>> _getSubmissionsQueryHandler;
 
     public SubmissionController(
         IValidator<CreateSubmissionRequest> createSubmissionRequestValidator,
         ICommandHandler<CreateSubmissionCommand, Guid> createSubmissionCommandHandler,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        IQueryHandler<GetSubmissionsQuery, IEnumerable<SubmissionResponse>> getSubmissionsHandler)
     {
         _createSubmissionRequestValidator = createSubmissionRequestValidator;
         _createSubmissionCommandHandler = createSubmissionCommandHandler;
         _currentUserService = currentUserService;
+        _getSubmissionsQueryHandler = getSubmissionsHandler;
     }
 
     [HttpGet(Name = "GetSubmissions")]
-    public ActionResult<IEnumerable<Submission>> Get()
+    public async Task<ActionResult<IEnumerable<SubmissionResponse>>> Get()
     {
         if (!_currentUserService.UserId.HasValue)
         {
@@ -39,7 +43,9 @@ public class SubmissionController : ControllerBase
 
         var query = new GetSubmissionsQuery(_currentUserService.UserId.Value);
 
-        return Ok();
+        var submissions = await _getSubmissionsQueryHandler.HandleAsync(query);
+
+        return Ok(submissions);
     }
 
     [HttpPost(Name = "CreateSubmission")]
@@ -62,6 +68,7 @@ public class SubmissionController : ControllerBase
             LanguageCode: req.LanguageCode,
             Text: req.Text);
 
+        // TODO: handle errors
         var submissionID = await _createSubmissionCommandHandler.HandleAsync(command);
 
         return CreatedAtAction(nameof(Post), new { id = submissionID }, submissionID);
