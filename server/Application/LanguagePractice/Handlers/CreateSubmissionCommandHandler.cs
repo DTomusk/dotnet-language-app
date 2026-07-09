@@ -24,8 +24,6 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
         CancellationToken cancellationToken = default)
     {
         // Ensure language code is valid and supported
-        // Persist submission in repo
-        // Return ID of submission entity
         // Later, we'll want to evaluate the submission
         // Replace with user's active language code
         var languageCode = LanguageCode.From(command.LanguageCode);
