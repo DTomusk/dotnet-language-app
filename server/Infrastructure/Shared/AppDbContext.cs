@@ -41,7 +41,7 @@ public class AppDbContext : DbContext
             v => LanguageCode.From(v)        // From database: string -> LanguageCode
         );
 
-        var nullableLanguageCodeConverter = new ValueConverter<LanguageCode?, string>(
+        var nullableLanguageCodeConverter = new ValueConverter<LanguageCode?, string?>(
             v => v != null ? v.Value : null, // To database: LanguageCode? -> string
             v => v != null ? LanguageCode.From(v) : null // From database: string -> LanguageCode?
         );
@@ -73,6 +73,11 @@ public class AppDbContext : DbContext
             entity.Property(e => e.ActiveLanguage)
                 .HasConversion(nullableLanguageCodeConverter)
                 .HasMaxLength(10);
+
+            entity.HasOne<User>()
+                .WithOne()
+                .HasForeignKey<LanguageLearner>(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

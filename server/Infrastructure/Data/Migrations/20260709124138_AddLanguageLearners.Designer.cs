@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260709124138_AddLanguageLearners")]
+    partial class AddLanguageLearners
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,6 +54,7 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Domain.LanguagePractice.Entities.LanguageLearner", b =>
                 {
                     b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("ActiveLanguage")
@@ -91,15 +95,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Submissions");
-                });
-
-            modelBuilder.Entity("Domain.LanguagePractice.Entities.LanguageLearner", b =>
-                {
-                    b.HasOne("Domain.Auth.Entities.User", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.LanguagePractice.Entities.LanguageLearner", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.LanguagePractice.Entities.Submission", b =>
