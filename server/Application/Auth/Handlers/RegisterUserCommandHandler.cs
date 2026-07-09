@@ -27,12 +27,8 @@ public class RegisterUserCommandHandler(
             throw new InvalidOperationException("User with the same display name already exists.");
         }
 
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            DisplayName = command.DisplayName,
-            PasswordHash = _passwordHasher.HashPassword(command.Password)
-        };
+        var passwordHash = _passwordHasher.HashPassword(command.Password);
+        var user = User.Create(command.DisplayName, passwordHash);
 
         await _userRepository.CreateAsync(user, cancellationToken);
 
