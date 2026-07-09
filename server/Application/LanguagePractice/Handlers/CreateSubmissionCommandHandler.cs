@@ -27,19 +27,14 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
         // Persist submission in repo
         // Return ID of submission entity
         // Later, we'll want to evaluate the submission
-        var submission = new Submission
-        {
-            ID = Guid.NewGuid(),
-            UserID = command.UserID,
-            // Replace with user's active language code
-            LanguageCode = LanguageCode.From(command.LanguageCode),
-            Text = command.Text
-        };
+        // Replace with user's active language code
+        var languageCode = LanguageCode.From(command.LanguageCode);
+        var submission = Submission.Create(command.UserID, languageCode, command.Text);
 
         await _submissionRepository.CreateAsync(submission, cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return submission.ID;
+        return submission.Id;
     }
 }

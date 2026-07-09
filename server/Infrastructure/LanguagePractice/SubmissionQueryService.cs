@@ -18,7 +18,7 @@ public class SubmissionQueryService : ISubmissionQueryService
     {
         return await _context.Submissions
             .AsNoTracking()
-            .Where(s => s.ID == id)
+            .Where(s => s.Id == id)
             .Select(s => new SubmissionResponse(s.Text, s.LanguageCode))
             .SingleOrDefaultAsync(cancellationToken);
     }
@@ -27,7 +27,7 @@ public class SubmissionQueryService : ISubmissionQueryService
     {
         return await _context.Submissions
             .AsNoTracking()
-            .Where(s => s.UserID == userId)
+            .Where(s => s.UserId == userId)
             .Select(s => new SubmissionResponse(s.Text, s.LanguageCode))
             .ToListAsync(cancellationToken);
     }

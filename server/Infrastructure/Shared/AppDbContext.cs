@@ -1,7 +1,6 @@
 ﻿using Domain.Auth.Entities;
 using Domain.LanguagePractice.Entities;
 using Domain.LanguagePractice.ValueObjects;
-using Infrastructure.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -21,12 +20,6 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Value converter for LanguageCode
-        var languageCodeConverter = new ValueConverter<LanguageCode, string>(
-            v => v.Value,                    // To database: LanguageCode -> string
-            v => LanguageCode.From(v)        // From database: string -> LanguageCode
-        );
-
         // Configure User entity
         modelBuilder.Entity<User>(entity =>
         {
@@ -42,22 +35,44 @@ public class AppDbContext : DbContext
                 .IsRequired();
         });
 
+        // Value converter for LanguageCode
+        var languageCodeConverter = new ValueConverter<LanguageCode, string>(
+            v => v.Value,                    // To database: LanguageCode -> string
+            v => LanguageCode.From(v)        // From database: string -> LanguageCode
+        );
+
+        var nullableLanguageCodeConverter = new ValueConverter<LanguageCode?, string>(
+            v => v != null ? v.Value : null, // To database: LanguageCode? -> string
+            v => v != null ? LanguageCode.From(v) : null // From database: string -> LanguageCode?
+        );
+
         // Configure Submission entity
         modelBuilder.Entity<Submission>(entity =>
         {
-            entity.HasKey(e => e.ID);
+            entity.HasKey(e => e.Id);
             entity.Property(e => e.LanguageCode)
                 .HasConversion(languageCodeConverter)
                 .IsRequired()
                 .HasMaxLength(10);
             entity.Property(e => e.Text)
                 .IsRequired();
+            entity.Property(e => e.CreatedAt)
+                .IsRequired();
 
             // Configure the relationship between Submission and User
             entity.HasOne<User>()
                 .WithMany()
-                .HasForeignKey(e => e.UserID)
+                .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Configure LanguageLearner entity 
+        modelBuilder.Entity<LanguageLearner>(entity =>
+        {
+            entity.HasKey(e => e.UserId);
+            entity.Property(e => e.ActiveLanguage)
+                .HasConversion(nullableLanguageCodeConverter)
+                .HasMaxLength(10);
         });
     }
 }
