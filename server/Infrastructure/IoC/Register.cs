@@ -1,9 +1,7 @@
 ﻿using Application.Auth.Interfaces;
-using Application.LanguagePractice.Interfaces;
 using Application.Shared.Interfaces;
 using Application.Submissions.Interfaces;
 using Infrastructure.Auth;
-using Infrastructure.LanguagePractice;
 using Infrastructure.Shared;
 using Infrastructure.Submissions;
 using Microsoft.EntityFrameworkCore;
@@ -17,20 +15,14 @@ public static class Register
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Db context
-        services.AddDbContext<AuthDbContext>(options =>
-        {
-            options.UseNpgsql(configuration.GetConnectionString("DATABASE_URL"));
-        });
-
-        services.AddDbContext<LanguagePracticeDbContext>(options =>
+        services.AddDbContext<AppDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DATABASE_URL"));
         });
 
         services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 
-        services.AddScoped<IAuthUnitOfWork, AuthUnitOfWork>();
-        services.AddScoped<ILanguagePracticeUnitOfWork, LanguagePracticeUnitOfWork>();
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();

@@ -1,14 +1,15 @@
 ﻿using Application.Auth.Interfaces;
 using Domain.Auth.Entities;
+using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Auth;
 
 public class UserRepository : IUserRepository
 {
-    private readonly AuthDbContext _context;
+    private readonly AppDbContext _context;
 
-    public UserRepository(AuthDbContext context)
+    public UserRepository(AppDbContext context)
     {
         _context = context;
     }

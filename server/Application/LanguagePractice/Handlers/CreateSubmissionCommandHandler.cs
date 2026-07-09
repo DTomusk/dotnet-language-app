@@ -1,19 +1,19 @@
-﻿using Application.LanguagePractice.Interfaces;
-using Application.Shared.Interfaces;
+﻿using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
 using Application.Submissions.Interfaces;
 using Domain.LanguagePractice.Entities;
+using Domain.LanguagePractice.ValueObjects;
 
 namespace Application.Submissions.Handlers;
 
 public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCommand, Guid>
 {
     private readonly ISubmissionRepository _submissionRepository;
-    private readonly ILanguagePracticeUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CreateSubmissionCommandHandler(
         ISubmissionRepository submissionRepository,
-        ILanguagePracticeUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork)
     {
         _submissionRepository = submissionRepository;
         _unitOfWork = unitOfWork;
@@ -31,7 +31,8 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
         {
             ID = Guid.NewGuid(),
             UserID = command.UserID,
-            LanguageCode = command.LanguageCode,
+            // Replace with user's active language code
+            LanguageCode = LanguageCode.From(command.LanguageCode),
             Text = command.Text
         };
 

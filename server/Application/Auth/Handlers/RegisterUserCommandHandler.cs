@@ -10,12 +10,12 @@ public class RegisterUserCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     ITokenGenerator tokenGenerator,
-    IAuthUnitOfWork unitOfWork) : ICommandHandler<RegisterUserCommand, AuthResponse>
+    IUnitOfWork unitOfWork) : ICommandHandler<RegisterUserCommand, AuthResponse>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
     private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
-    private readonly IAuthUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<AuthResponse> HandleAsync(
         RegisterUserCommand command, 

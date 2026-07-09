@@ -1,13 +1,12 @@
 ﻿using Application.Shared.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Shared;
 
-public class EfUnitOfWork<TContext> where TContext : DbContext
+public class EfUnitOfWork : IUnitOfWork
 {
-    private readonly TContext _context;
+    private readonly AppDbContext _context;
 
-    public EfUnitOfWork(TContext context)
+    public EfUnitOfWork(AppDbContext context)
     {
         _context = context;
     }

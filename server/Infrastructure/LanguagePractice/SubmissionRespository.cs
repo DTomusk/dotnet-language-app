@@ -1,14 +1,14 @@
 ﻿using Application.Submissions.Interfaces;
 using Domain.LanguagePractice.Entities;
-using Infrastructure.LanguagePractice;
+using Infrastructure.Shared;
 
 namespace Infrastructure.Submissions;
 
 public class SubmissionRespository : ISubmissionRepository
 {
-    private readonly LanguagePracticeDbContext _context;
+    private readonly AppDbContext _context;
 
-    public SubmissionRespository(LanguagePracticeDbContext context)
+    public SubmissionRespository(AppDbContext context)
     {
         _context = context;
     }
