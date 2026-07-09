@@ -3,6 +3,7 @@ using Application.Shared.Interfaces;
 using Application.Submissions.Interfaces;
 using Infrastructure.Auth;
 using Infrastructure.Shared;
+using Infrastructure.Shared.Events;
 using Infrastructure.Submissions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,9 @@ public static class Register
         services.AddScoped<ISubmissionRepository, SubmissionRespository>();
         services.AddScoped<ISubmissionQueryService, SubmissionQueryService>();
         services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+
+        // Automatically starts the outbox processor service when the application starts
+        services.AddHostedService<OutboxProcessorService>();
 
         return services;
     }

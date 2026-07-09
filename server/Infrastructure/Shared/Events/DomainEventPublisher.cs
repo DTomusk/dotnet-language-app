@@ -2,7 +2,7 @@
 using Domain.Shared.Events;
 using System.Text.Json;
 
-namespace Infrastructure.Shared;
+namespace Infrastructure.Shared.Events;
 
 public class DomainEventPublisher : IDomainEventPublisher
 {
