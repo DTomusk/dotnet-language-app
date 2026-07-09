@@ -3,6 +3,7 @@ using Application.Auth.DTOs;
 using Application.Auth.Interfaces;
 using Application.Shared.Interfaces;
 using Domain.Auth.Entities;
+using Domain.Auth.Events;
 
 namespace Application.Auth.Handlers;
 
@@ -10,11 +11,13 @@ public class RegisterUserCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     ITokenGenerator tokenGenerator,
+    IDomainEventPublisher eventPublisher,
     IUnitOfWork unitOfWork) : ICommandHandler<RegisterUserCommand, AuthResponse>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
     private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
+    private readonly IDomainEventPublisher _eventPublisher = eventPublisher;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<AuthResponse> HandleAsync(
@@ -33,6 +36,13 @@ public class RegisterUserCommandHandler(
         await _userRepository.CreateAsync(user, cancellationToken);
 
         var token = _tokenGenerator.GenerateToken(user.Id, user.DisplayName);
+
+        await _eventPublisher.PublishAsync(new UserCreatedEvent()
+        {
+            UserId = user.Id,
+            DisplayName = user.DisplayName,
+            CreatedAt = user.CreatedAt
+        }, cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 

@@ -1,6 +1,7 @@
 ﻿using Domain.Auth.Entities;
 using Domain.LanguagePractice.Entities;
 using Domain.LanguagePractice.ValueObjects;
+using Domain.Shared.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -15,6 +16,10 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
 
     public DbSet<Submission> Submissions => Set<Submission>();
+
+    public DbSet<LanguageLearner> LanguageLearners => Set<LanguageLearner>();
+
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -78,6 +83,20 @@ public class AppDbContext : DbContext
                 .WithOne()
                 .HasForeignKey<LanguageLearner>(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Configure OutboxMessage entity
+        modelBuilder.Entity<OutboxMessage>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.EventType)
+                .IsRequired()
+                .HasMaxLength(200);
+            entity.Property(e => e.Payload)
+                .IsRequired();
+            entity.Property(e => e.OccurredAt)
+                .IsRequired();
+            entity.HasIndex(e => new { e.ProcessedAt, e.OccurredAt });
         });
     }
 }

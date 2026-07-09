@@ -29,6 +29,7 @@ public static class Register
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ISubmissionRepository, SubmissionRespository>();
         services.AddScoped<ISubmissionQueryService, SubmissionQueryService>();
+        services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
 
         return services;
     }
