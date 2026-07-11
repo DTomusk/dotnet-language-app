@@ -21,6 +21,8 @@ public class AppDbContext : DbContext
 
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
+    public DbSet<ProcessedEvent> ProcessedEvents => Set<ProcessedEvent>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -97,6 +99,19 @@ public class AppDbContext : DbContext
             entity.Property(e => e.OccurredAt)
                 .IsRequired();
             entity.HasIndex(e => new { e.ProcessedAt, e.OccurredAt });
+        });
+
+        // Configure ProcessedEvent entity
+        modelBuilder.Entity<ProcessedEvent>(entity =>
+        {
+            entity.HasKey(e => new { e.EventId, e.HandlerName });
+            entity.Property(e => e.EventId)
+                .IsRequired();
+            entity.Property(e => e.HandlerName)
+                .IsRequired()
+                .HasMaxLength(200);
+            entity.Property(e => e.ProcessedAt)
+                .IsRequired();
         });
     }
 }

@@ -16,6 +16,7 @@ public class OutboxProcessorService : BackgroundService
     // TODO: move into configuration
     private readonly TimeSpan _delay = TimeSpan.FromSeconds(10);
     private const int BATCH_SIZE = 100;
+    private const int RETRY_LIMIT = 3;
 
     public OutboxProcessorService(
         IServiceProvider serviceProvider,
@@ -47,12 +48,13 @@ public class OutboxProcessorService : BackgroundService
 
     private async Task ProcessOutboxMessagesAsync(CancellationToken cancellationToken)
     {
+        // Create scope manually to resolve scoped services like DbContext
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
+        var dispatcher = scope.ServiceProvider.GetRequiredService<EventDispatcher>();
 
         var messages = await context.OutboxMessages
-            .Where(m => m.ProcessedAt == null)
+            .Where(m => m.ProcessedAt == null && m.RetryCount < RETRY_LIMIT)
             .OrderBy(m => m.OccurredAt)
             .Take(BATCH_SIZE)
             .ToListAsync(cancellationToken);
@@ -69,7 +71,7 @@ public class OutboxProcessorService : BackgroundService
         {
             try
             {
-                // dispatch message here
+                await dispatcher.DispatchAsync(message.EventType, message.Payload, cancellationToken);
                 // We want at least once delivery, so don't mark as processed until after awaiting dispatch
                 message.MarkAsProcessed();
                 _logger.LogInformation("Processed outbox message {Id} of type {EventType}.", message.Id, message.EventType);

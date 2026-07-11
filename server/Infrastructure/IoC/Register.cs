@@ -1,7 +1,9 @@
 ﻿using Application.Auth.Interfaces;
+using Application.LanguagePractice.Interfaces;
 using Application.Shared.Interfaces;
 using Application.Submissions.Interfaces;
 using Infrastructure.Auth;
+using Infrastructure.LanguagePractice;
 using Infrastructure.Shared;
 using Infrastructure.Shared.Events;
 using Infrastructure.Submissions;
@@ -29,8 +31,11 @@ public static class Register
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ISubmissionRepository, SubmissionRespository>();
+        services.AddScoped<ILanguageLearnerRepository, LanguageLearnerRepository>();
         services.AddScoped<ISubmissionQueryService, SubmissionQueryService>();
         services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+        services.AddScoped<EventDispatcher, EventDispatcher>();
+        services.AddScoped<IIdempotencyService, IdempotencyService>();
 
         // Automatically starts the outbox processor service when the application starts
         services.AddHostedService<OutboxProcessorService>();

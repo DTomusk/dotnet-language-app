@@ -1,11 +1,13 @@
 ﻿using Application.Auth.Commands;
 using Application.Auth.DTOs;
 using Application.Auth.Handlers;
+using Application.LanguagePractice.Handlers;
 using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
 using Application.Submissions.DTOs;
 using Application.Submissions.Handlers;
 using Application.Submissions.Queries;
+using Domain.Auth.Events;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.IoC;
@@ -18,6 +20,8 @@ public static class Register
         services.AddScoped<ICommandHandler<LoginUserCommand, AuthResponse>, LoginUserCommandHandler>();
         services.AddScoped<ICommandHandler<RegisterUserCommand, AuthResponse>, RegisterUserCommandHandler>();
         services.AddScoped<IQueryHandler<GetSubmissionsQuery, IEnumerable<SubmissionResponse>>, GetSubmissionsQueryHandler>();
+
+        services.AddScoped<IEventHandler<UserCreatedEvent>, UserCreatedEventHandler>();
 
         return services;
     }
