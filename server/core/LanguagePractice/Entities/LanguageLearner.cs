@@ -1,4 +1,5 @@
 ﻿using Domain.LanguagePractice.ValueObjects;
+using Domain.Shared.Results;
 
 namespace Domain.LanguagePractice.Entities;
 
@@ -10,29 +11,31 @@ public class LanguageLearner
     public LanguageCode? ActiveLanguage { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    public static LanguageLearner Create(Guid userId)
+    public static Result<LanguageLearner> Create(Guid userId)
     {
         if (userId == Guid.Empty)
-            throw new ArgumentException("UserId cannot be empty.", nameof(userId));
+            return Result<LanguageLearner>.Failure(new Error("UserId cannot be empty.", ErrorType.Validation));
 
-        return new LanguageLearner
+        return Result<LanguageLearner>.Success(new LanguageLearner
         {
             UserId = userId,
             ActiveLanguage = null,
             CreatedAt = DateTime.UtcNow
-        };
+        });
     }
 
-    public void SetActiveLanguage(LanguageCode languageCode)
+    public Result SetActiveLanguage(LanguageCode languageCode)
     {
         if (languageCode == null)
-            throw new ArgumentNullException(nameof(languageCode));
+            return Result.Failure(new Error("LanguageCode cannot be null.", ErrorType.Validation));
 
         ActiveLanguage = languageCode;
+        return Result.Success();
     }
 
-    public void ClearActiveLanguage()
+    public Result ClearActiveLanguage()
     {
         ActiveLanguage = null;
+        return Result.Success();
     }
 }

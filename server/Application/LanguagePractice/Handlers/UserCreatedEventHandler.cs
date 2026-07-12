@@ -25,8 +25,13 @@ public class UserCreatedEventHandler : IEventHandler<UserCreatedEvent>
     // When a user is created, we want to create a corresponding language learner
     public async Task HandleAsync(UserCreatedEvent @event, CancellationToken cancellationToken = default)
     {
-        var languageLearner = LanguageLearner.Create(@event.UserId);
-        await _languageLearnerRepository.CreateAsync(languageLearner, cancellationToken);
+        var languageLearnerResult = LanguageLearner.Create(@event.UserId);
+        if (languageLearnerResult.IsFailure)
+        {
+            _logger.LogError("Failed to create LanguageLearner for UserId {UserId}: {Error}", @event.UserId, languageLearnerResult.Error);
+            return;
+        }
+        await _languageLearnerRepository.CreateAsync(languageLearnerResult.Value, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
     }
 }

@@ -14,34 +14,38 @@ public class LanguageLearnerTests
         var userId = Guid.NewGuid();
 
         // Act
-        var learner = LanguageLearner.Create(userId);
+        var learnerResult = LanguageLearner.Create(userId);
 
         // Assert
+        learnerResult.IsSuccess.Should().BeTrue();
+        var learner = learnerResult.Value;
+        learner.Should().NotBeNull();
         learner.UserId.Should().Be(userId);
         learner.ActiveLanguage.Should().BeNull();
         learner.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
     }
 
     [Fact]
-    public void Create_Should_Throw_When_UserId_Is_Empty()
+    public void Create_Should_Fail_When_UserId_Is_Empty()
     {
         // Arrange
         var userId = Guid.Empty;
 
         // Act
-        var act = () => LanguageLearner.Create(userId);
+        var result = LanguageLearner.Create(userId);
 
         // Assert
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("UserId cannot be empty.*")
-            .WithParameterName("userId");
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().NotBeNull();
+        result.Error.Message.Should().Be("UserId cannot be empty.");
     }
 
     [Fact]
     public void SetActiveLanguage_Should_Set_ActiveLanguage()
     {
         // Arrange
-        var learner = LanguageLearner.Create(Guid.NewGuid());
+        var learnerResult = LanguageLearner.Create(Guid.NewGuid());
+        var learner = learnerResult.Value;
         var languageCode = LanguageCode.Italian;
 
         // Act
@@ -52,31 +56,35 @@ public class LanguageLearnerTests
     }
 
     [Fact]
-    public void SetActiveLanguage_Should_Throw_When_LanguageCode_Is_Null()
+    public void SetActiveLanguage_Should_Fail_When_LanguageCode_Is_Null()
     {
         // Arrange
-        var learner = LanguageLearner.Create(Guid.NewGuid());
+        var learnerResult = LanguageLearner.Create(Guid.NewGuid());
+        var learner = learnerResult.Value;
 
         // Act
-        var act = () => learner.SetActiveLanguage(null!);
+        var result = learner.SetActiveLanguage(null!);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>()
-            .WithParameterName("languageCode");
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().NotBeNull();
+        result.Error.Message.Should().Be("LanguageCode cannot be null.");
     }
 
     [Fact]
     public void SetActiveLanguage_Should_Update_Existing_ActiveLanguage()
     {
         // Arrange
-        var learner = LanguageLearner.Create(Guid.NewGuid());
+        var learnerResult = LanguageLearner.Create(Guid.NewGuid());
+        var learner = learnerResult.Value;
         learner.SetActiveLanguage(LanguageCode.Italian);
         var newLanguageCode = LanguageCode.From("it");
 
         // Act
-        learner.SetActiveLanguage(newLanguageCode);
+        var result = learner.SetActiveLanguage(newLanguageCode);
 
         // Assert
+        result.IsSuccess.Should().BeTrue(); result.Error.Should().BeNull();  
         learner.ActiveLanguage.Should().Be(newLanguageCode);
     }
 
@@ -84,13 +92,16 @@ public class LanguageLearnerTests
     public void ClearActiveLanguage_Should_Set_ActiveLanguage_To_Null()
     {
         // Arrange
-        var learner = LanguageLearner.Create(Guid.NewGuid());
+        var learnerResult = LanguageLearner.Create(Guid.NewGuid());
+        var learner = learnerResult.Value;
         learner.SetActiveLanguage(LanguageCode.Italian);
 
         // Act
-        learner.ClearActiveLanguage();
+        var result = learner.ClearActiveLanguage();
 
         // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Error.Should().BeNull();
         learner.ActiveLanguage.Should().BeNull();
     }
 
@@ -98,12 +109,14 @@ public class LanguageLearnerTests
     public void ClearActiveLanguage_Should_Work_When_ActiveLanguage_Is_Already_Null()
     {
         // Arrange
-        var learner = LanguageLearner.Create(Guid.NewGuid());
+        var learnerResult = LanguageLearner.Create(Guid.NewGuid());
+        var learner = learnerResult.Value;
 
         // Act
-        learner.ClearActiveLanguage();
+        var result = learner.ClearActiveLanguage();
 
         // Assert
+        result.IsSuccess.Should().BeTrue(); 
         learner.ActiveLanguage.Should().BeNull();
     }
 
@@ -128,7 +141,8 @@ public class LanguageLearnerTests
         var beforeCreation = DateTime.UtcNow;
 
         // Act
-        var learner = LanguageLearner.Create(Guid.NewGuid());
+        var learnerResult = LanguageLearner.Create(Guid.NewGuid());
+        var learner = learnerResult.Value;
 
         // Assert
         var afterCreation = DateTime.UtcNow;
