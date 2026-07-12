@@ -7,10 +7,6 @@ public class CreateSubmissionRequestValidator : AbstractValidator<CreateSubmissi
 {
     public CreateSubmissionRequestValidator()
     {
-        RuleFor(x => x.LanguageCode)
-            .NotEmpty()
-            .MaximumLength(10);
-
         // Max length is fairly arbitrary for now, can adjust in future
         RuleFor(x => x.Text)
             .NotEmpty()

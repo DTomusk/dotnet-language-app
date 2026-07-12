@@ -64,7 +64,6 @@ public class SubmissionController : ControllerBase
 
         var command = new CreateSubmissionCommand(
             UserID: _currentUserService.UserId.Value,
-            LanguageCode: req.LanguageCode,
             Text: req.Text);
 
         // TODO: handle errors

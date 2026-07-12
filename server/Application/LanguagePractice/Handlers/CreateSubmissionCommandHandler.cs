@@ -1,4 +1,5 @@
-﻿using Application.Shared.Interfaces;
+﻿using Application.LanguagePractice.Interfaces;
+using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
 using Application.Submissions.Interfaces;
 using Domain.LanguagePractice.Entities;
@@ -9,13 +10,16 @@ namespace Application.Submissions.Handlers;
 public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCommand, Guid>
 {
     private readonly ISubmissionRepository _submissionRepository;
+    private readonly ILanguageLearnerRepository _languageLearnerRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateSubmissionCommandHandler(
         ISubmissionRepository submissionRepository,
+        ILanguageLearnerRepository languageLearnerRepository,
         IUnitOfWork unitOfWork)
     {
         _submissionRepository = submissionRepository;
+        _languageLearnerRepository = languageLearnerRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -23,10 +27,21 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
         CreateSubmissionCommand command,
         CancellationToken cancellationToken = default)
     {
-        // Ensure language code is valid and supported
-        // Later, we'll want to evaluate the submission
-        // Replace with user's active language code
-        var languageCode = LanguageCode.From(command.LanguageCode);
+        var languageLearner = await _languageLearnerRepository.GetByIdAsync(command.UserID, cancellationToken);
+
+        if (languageLearner == null)
+        {
+            // TODO: throw a more relevant exception
+            throw new ArgumentException($"Language learner with ID {command.UserID} not found.");
+        }
+
+        var languageCode = languageLearner.ActiveLanguage;
+
+        if (languageCode == null)
+        {
+            throw new ArgumentException($"Invalid language code: {languageCode}");
+        }
+
         var submission = Submission.Create(command.UserID, languageCode, command.Text);
 
         await _submissionRepository.CreateAsync(submission, cancellationToken);
