@@ -28,6 +28,13 @@ public class EventDispatcher
         _eventTypes["UserCreatedEvent"] = typeof(UserCreatedEvent);
     }
 
+    /// <summary>
+    /// Dispatches the event to all registered handlers.
+    /// </summary>
+    /// <param name="eventType">The type of the event to dispatch.</param>
+    /// <param name="payload">The serialized event payload.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DispatchAsync(string eventType, string payload, CancellationToken cancellationToken = default)
     {
         if (!_eventTypes.TryGetValue(eventType, out var type))

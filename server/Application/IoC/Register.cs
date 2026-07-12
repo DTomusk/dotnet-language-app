@@ -1,7 +1,9 @@
 ﻿using Application.Auth.Commands;
 using Application.Auth.DTOs;
 using Application.Auth.Handlers;
+using Application.LanguagePractice.Commands;
 using Application.LanguagePractice.Handlers;
+using Application.LanguagePractice.Queries;
 using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
 using Application.Submissions.DTOs;
@@ -20,6 +22,8 @@ public static class Register
         services.AddScoped<ICommandHandler<LoginUserCommand, AuthResponse>, LoginUserCommandHandler>();
         services.AddScoped<ICommandHandler<RegisterUserCommand, AuthResponse>, RegisterUserCommandHandler>();
         services.AddScoped<IQueryHandler<GetSubmissionsQuery, IEnumerable<SubmissionResponse>>, GetSubmissionsQueryHandler>();
+        services.AddScoped<ICommandHandler<SetPracticeLanguageCommand>, SetPracticeLanguageCommandHandler>();
+        services.AddScoped<IQueryHandler<GetUserLanguageQuery, string>, GetUserLanguageQueryHandler>();
 
         services.AddScoped<IEventHandler<UserCreatedEvent>, UserCreatedEventHandler>();
 
