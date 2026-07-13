@@ -1,4 +1,5 @@
-﻿using Api.Shared.Extensions;
+﻿using Api.Shared.Controllers;
+using Api.Shared.Extensions;
 using Application.Auth.Interfaces;
 using Application.LanguagePractice.Commands;
 using Application.LanguagePractice.Queries;
@@ -11,30 +12,24 @@ namespace Api.LanguagePractice.Controllers;
 [ApiController]
 [Authorize]
 [Route("Me/Language")]
-public class LanguageLearnerController : ControllerBase
+public class LanguageLearnerController : AuthenticatedControllerBase
 {
-    private readonly ICurrentUserService _currentUserService;
     private readonly ICommandHandler<SetPracticeLanguageCommand> _setPracticeLanguageCommandHandler;
     private readonly IQueryHandler<GetUserLanguageQuery, string> _getUserLanguageQueryHandler;
 
     public LanguageLearnerController(ICurrentUserService currentUserService, 
         ICommandHandler<SetPracticeLanguageCommand> setPracticeLanguageCommandHandler,
         IQueryHandler<GetUserLanguageQuery, string> getUserLanguageQueryHandler)
+        : base(currentUserService)
     {
-        _currentUserService = currentUserService;
         _setPracticeLanguageCommandHandler = setPracticeLanguageCommandHandler;
         _getUserLanguageQueryHandler = getUserLanguageQueryHandler;
     }
 
     [HttpGet(Name = "GetPracticeLanguage")]
     public async Task<IActionResult> GetPracticeLanguage(CancellationToken cancellationToken)
-    {
-        if (!_currentUserService.UserId.HasValue)
-        {
-            return Unauthorized(new { Message = "User not authenticated" });
-        }
-       
-        var query = new GetUserLanguageQuery(_currentUserService.UserId.Value);
+    {       
+        var query = new GetUserLanguageQuery(CurrentUserId);
         var practiceLanguage = await _getUserLanguageQueryHandler.HandleAsync(query, cancellationToken);
 
         return Ok(practiceLanguage);
@@ -44,12 +39,7 @@ public class LanguageLearnerController : ControllerBase
     [HttpPut(Name = "SetPracticeLanguage")]
     public async Task<IActionResult> SetPracticeLanguage(string languageCode)
     {
-        if (!_currentUserService.UserId.HasValue)
-        {
-            return Unauthorized(new { Message = "User not authenticated" });
-        }
-
-        var command = new SetPracticeLanguageCommand(_currentUserService.UserId.Value, languageCode);
+        var command = new SetPracticeLanguageCommand(CurrentUserId, languageCode);
 
         var result = await _setPracticeLanguageCommandHandler.HandleAsync(command);
 

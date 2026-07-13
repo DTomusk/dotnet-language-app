@@ -1,3 +1,4 @@
+using Api.Shared.Controllers;
 using Api.Shared.Extensions;
 using Api.Submissions.DTOs;
 using Application.Auth.Interfaces;
@@ -5,7 +6,6 @@ using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
 using Application.Submissions.DTOs;
 using Application.Submissions.Queries;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,31 +14,25 @@ namespace Api.Submissions.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class SubmissionController : ControllerBase
+public class SubmissionController : AuthenticatedControllerBase
 {
     private readonly ICommandHandler<CreateSubmissionCommand, Guid> _createSubmissionCommandHandler;
-    private readonly ICurrentUserService _currentUserService;
     private readonly IQueryHandler<GetSubmissionsQuery, IEnumerable<SubmissionResponse>> _getSubmissionsQueryHandler;
 
     public SubmissionController(
         ICommandHandler<CreateSubmissionCommand, Guid> createSubmissionCommandHandler,
-        ICurrentUserService currentUserService,
-        IQueryHandler<GetSubmissionsQuery, IEnumerable<SubmissionResponse>> getSubmissionsHandler)
+        IQueryHandler<GetSubmissionsQuery, IEnumerable<SubmissionResponse>> getSubmissionsHandler,
+        ICurrentUserService currentUserService)
+        : base(currentUserService)
     {
         _createSubmissionCommandHandler = createSubmissionCommandHandler;
-        _currentUserService = currentUserService;
         _getSubmissionsQueryHandler = getSubmissionsHandler;
     }
 
     [HttpGet(Name = "GetSubmissions")]
     public async Task<ActionResult<IEnumerable<SubmissionResponse>>> Get()
     {
-        if (!_currentUserService.UserId.HasValue)
-        {
-            return Unauthorized(new { Message = "User not authenticated" });
-        }
-
-        var query = new GetSubmissionsQuery(_currentUserService.UserId.Value);
+        var query = new GetSubmissionsQuery(CurrentUserId);
 
         var submissions = await _getSubmissionsQueryHandler.HandleAsync(query);
 
@@ -53,13 +47,8 @@ public class SubmissionController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        if (!_currentUserService.UserId.HasValue)
-        {
-            return Unauthorized(new { Message = "User not authenticated" });
-        }
-
         var command = new CreateSubmissionCommand(
-            UserID: _currentUserService.UserId.Value,
+            UserID: CurrentUserId,
             Text: req.Text);
 
         var submissionResult = await _createSubmissionCommandHandler.HandleAsync(command);
