@@ -1,3 +1,4 @@
+using Api.Shared.Extensions;
 using Api.Submissions.DTOs;
 using Application.Auth.Interfaces;
 using Application.Shared.Interfaces;
@@ -45,7 +46,7 @@ public class SubmissionController : ControllerBase
     }
 
     [HttpPost(Name = "CreateSubmission")]
-    public async Task<ActionResult> Post(CreateSubmissionRequest req)
+    public async Task<IActionResult> Post(CreateSubmissionRequest req)
     {
         if (!ModelState.IsValid)
         {
@@ -63,11 +64,8 @@ public class SubmissionController : ControllerBase
 
         var submissionResult = await _createSubmissionCommandHandler.HandleAsync(command);
 
-        if (submissionResult.IsFailure)
-        {
-            return BadRequest(new { submissionResult.Error.Message });
-        }
-
-        return CreatedAtAction(nameof(Post), new { id = submissionResult.Value }, submissionResult.Value);
+        return submissionResult.ToCreatedAtActionResult(
+            actionName: nameof(Post),
+            routeValues: new { id = submissionResult.Value });
     }
 }

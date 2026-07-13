@@ -1,4 +1,5 @@
 ﻿using Api.Auth.DTOs;
+using Api.Shared.Extensions;
 using Application.Auth.Commands;
 using Application.Auth.DTOs;
 using Application.Shared.Interfaces;
@@ -23,7 +24,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<AuthResponse>> Register(RegisterUserRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Register(RegisterUserRequest request, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
         {
@@ -33,25 +34,15 @@ public class AuthController : ControllerBase
         var command = new RegisterUserCommand(request.DisplayName, request.Password);
         var authResult = await _registerHandler.HandleAsync(command, cancellationToken);
 
-        if (authResult.IsFailure)
-        {
-            return BadRequest(new { message = authResult.Error.Message });
-        }
-
-        return Ok(authResult.Value);
+        return authResult.ToActionResult();
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponse>> Login(LoginUserRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Login(LoginUserRequest request, CancellationToken cancellationToken)
     {
         var command = new LoginUserCommand(request.DisplayName, request.Password);
         var authResult = await _loginHandler.HandleAsync(command, cancellationToken);
 
-        if (authResult.IsFailure)
-        {
-            return BadRequest(new { message = authResult.Error.Message });
-        }
-
-        return Ok(authResult.Value);
+        return authResult.ToActionResult();
     }
 }

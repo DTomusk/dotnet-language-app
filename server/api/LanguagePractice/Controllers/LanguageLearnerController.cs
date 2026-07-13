@@ -1,4 +1,5 @@
-﻿using Application.Auth.Interfaces;
+﻿using Api.Shared.Extensions;
+using Application.Auth.Interfaces;
 using Application.LanguagePractice.Commands;
 using Application.LanguagePractice.Queries;
 using Application.Shared.Interfaces;
@@ -26,7 +27,7 @@ public class LanguageLearnerController : ControllerBase
     }
 
     [HttpGet(Name = "GetPracticeLanguage")]
-    public async Task<ActionResult<string>> GetPracticeLanguage(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetPracticeLanguage(CancellationToken cancellationToken)
     {
         if (!_currentUserService.UserId.HasValue)
         {
@@ -41,7 +42,7 @@ public class LanguageLearnerController : ControllerBase
 
 
     [HttpPut(Name = "SetPracticeLanguage")]
-    public async Task<ActionResult> SetPracticeLanguage(string languageCode)
+    public async Task<IActionResult> SetPracticeLanguage(string languageCode)
     {
         if (!_currentUserService.UserId.HasValue)
         {
@@ -52,12 +53,6 @@ public class LanguageLearnerController : ControllerBase
 
         var result = await _setPracticeLanguageCommandHandler.HandleAsync(command);
 
-        // TODO: middleware to choose http code
-        if (result.IsFailure)
-        {
-            return BadRequest(new { result.Error.Message });
-        }
-
-        return Ok();
+        return result.ToActionResult();
     }
 }
