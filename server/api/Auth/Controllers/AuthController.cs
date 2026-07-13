@@ -30,30 +30,28 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        try
+        var command = new RegisterUserCommand(request.DisplayName, request.Password);
+        var authResult = await _registerHandler.HandleAsync(command, cancellationToken);
+
+        if (authResult.IsFailure)
         {
-            var command = new RegisterUserCommand(request.DisplayName, request.Password);
-            var authResponse = await _registerHandler.HandleAsync(command, cancellationToken);
-            return Ok(authResponse);
+            return BadRequest(new { message = authResult.Error.Message });
         }
-        catch (Exception ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+
+        return Ok(authResult.Value);
     }
 
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponse>> Login(LoginUserRequest request, CancellationToken cancellationToken)
     {
-        try
+        var command = new LoginUserCommand(request.DisplayName, request.Password);
+        var authResult = await _loginHandler.HandleAsync(command, cancellationToken);
+
+        if (authResult.IsFailure)
         {
-            var command = new LoginUserCommand(request.DisplayName, request.Password);
-            var authResponse = await _loginHandler.HandleAsync(command, cancellationToken);
-            return Ok(authResponse);
+            return BadRequest(new { message = authResult.Error.Message });
         }
-        catch (Exception ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+
+        return Ok(authResult.Value);
     }
 }
