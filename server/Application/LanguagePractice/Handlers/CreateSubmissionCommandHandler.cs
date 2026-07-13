@@ -3,7 +3,7 @@ using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
 using Application.Submissions.Interfaces;
 using Domain.LanguagePractice.Entities;
-using Domain.LanguagePractice.ValueObjects;
+using Domain.Shared.Results;
 
 namespace Application.Submissions.Handlers;
 
@@ -23,24 +23,19 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Guid> HandleAsync(
+    public async Task<Result<Guid>> HandleAsync(
         CreateSubmissionCommand command,
         CancellationToken cancellationToken = default)
     {
         var languageLearner = await _languageLearnerRepository.GetByIdAsync(command.UserID, cancellationToken);
 
         if (languageLearner == null)
-        {
-            // TODO: throw a more relevant exception
-            throw new ArgumentException($"Language learner with ID {command.UserID} not found.");
-        }
+            return Result<Guid>.Failure(new Error($"Language learner with ID {command.UserID} not found.", ErrorType.NotFound));
 
         var languageCode = languageLearner.ActiveLanguage;
 
         if (languageCode == null)
-        {
-            throw new ArgumentException($"Invalid language code: {languageCode}");
-        }
+            return Result<Guid>.Failure(new Error($"Invalid language code: {languageCode}", ErrorType.Validation));
 
         var submission = Submission.Create(command.UserID, languageCode, command.Text);
 
@@ -48,6 +43,6 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return submission.Id;
+        return Result<Guid>.Success(submission.Id);
     }
 }

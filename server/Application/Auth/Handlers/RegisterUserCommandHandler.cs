@@ -4,6 +4,7 @@ using Application.Auth.Interfaces;
 using Application.Shared.Interfaces;
 using Domain.Auth.Entities;
 using Domain.Auth.Events;
+using Domain.Shared.Results;
 
 namespace Application.Auth.Handlers;
 
@@ -20,15 +21,13 @@ public class RegisterUserCommandHandler(
     private readonly IDomainEventPublisher _eventPublisher = eventPublisher;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<AuthResponse> HandleAsync(
+    public async Task<Result<AuthResponse>> HandleAsync(
         RegisterUserCommand command, 
         CancellationToken cancellationToken = default)
     {
         var existingUser = await _userRepository.GetByDisplayNameAsync(command.DisplayName, cancellationToken);
         if (existingUser != null)
-        {
-            throw new InvalidOperationException("User with the same display name already exists.");
-        }
+            return Result<AuthResponse>.Failure(new Error("User with the same display name already exists.", ErrorType.Validation));
 
         var passwordHash = _passwordHasher.HashPassword(command.Password);
         var user = User.Create(command.DisplayName, passwordHash);
@@ -46,6 +45,6 @@ public class RegisterUserCommandHandler(
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return new AuthResponse(user.Id, user.DisplayName, token);
+        return Result<AuthResponse>.Success(new AuthResponse(user.Id, user.DisplayName, token));
     }
 }

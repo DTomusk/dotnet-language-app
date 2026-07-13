@@ -50,14 +50,14 @@ public class LanguageLearnerController : ControllerBase
 
         var command = new SetPracticeLanguageCommand(_currentUserService.UserId.Value, languageCode);
 
-        try
+        var result = await _setPracticeLanguageCommandHandler.HandleAsync(command);
+
+        // TODO: middleware to choose http code
+        if (result.IsFailure)
         {
-            await _setPracticeLanguageCommandHandler.HandleAsync(command);
-            return Ok();
+            return BadRequest(new { result.Error.Message });
         }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { ex.Message });
-        }
+
+        return Ok();
     }
 }

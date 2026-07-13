@@ -50,6 +50,7 @@ public class SubmissionController : ControllerBase
     [HttpPost(Name = "CreateSubmission")]
     public async Task<ActionResult> Post(CreateSubmissionRequest req)
     {
+        // TODO: get fluent validation to run automatically
         var validationResult = await _createSubmissionRequestValidator.ValidateAsync(req);
 
         if (!validationResult.IsValid)
@@ -66,9 +67,13 @@ public class SubmissionController : ControllerBase
             UserID: _currentUserService.UserId.Value,
             Text: req.Text);
 
-        // TODO: handle errors
-        var submissionID = await _createSubmissionCommandHandler.HandleAsync(command);
+        var submissionResult = await _createSubmissionCommandHandler.HandleAsync(command);
 
-        return CreatedAtAction(nameof(Post), new { id = submissionID }, submissionID);
+        if (submissionResult.IsFailure)
+        {
+            return BadRequest(new { submissionResult.Error.Message });
+        }
+
+        return CreatedAtAction(nameof(Post), new { id = submissionResult.Value }, submissionResult.Value);
     }
 }
