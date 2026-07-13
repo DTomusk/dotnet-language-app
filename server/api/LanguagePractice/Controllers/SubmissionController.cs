@@ -15,18 +15,15 @@ namespace Api.Submissions.Controllers;
 [Route("[controller]")]
 public class SubmissionController : ControllerBase
 {
-    private readonly IValidator<CreateSubmissionRequest> _createSubmissionRequestValidator;
     private readonly ICommandHandler<CreateSubmissionCommand, Guid> _createSubmissionCommandHandler;
     private readonly ICurrentUserService _currentUserService;
     private readonly IQueryHandler<GetSubmissionsQuery, IEnumerable<SubmissionResponse>> _getSubmissionsQueryHandler;
 
     public SubmissionController(
-        IValidator<CreateSubmissionRequest> createSubmissionRequestValidator,
         ICommandHandler<CreateSubmissionCommand, Guid> createSubmissionCommandHandler,
         ICurrentUserService currentUserService,
         IQueryHandler<GetSubmissionsQuery, IEnumerable<SubmissionResponse>> getSubmissionsHandler)
     {
-        _createSubmissionRequestValidator = createSubmissionRequestValidator;
         _createSubmissionCommandHandler = createSubmissionCommandHandler;
         _currentUserService = currentUserService;
         _getSubmissionsQueryHandler = getSubmissionsHandler;
@@ -50,12 +47,9 @@ public class SubmissionController : ControllerBase
     [HttpPost(Name = "CreateSubmission")]
     public async Task<ActionResult> Post(CreateSubmissionRequest req)
     {
-        // TODO: get fluent validation to run automatically
-        var validationResult = await _createSubmissionRequestValidator.ValidateAsync(req);
-
-        if (!validationResult.IsValid)
+        if (!ModelState.IsValid)
         {
-            return BadRequest(validationResult.Errors);
+            return BadRequest(ModelState);
         }
 
         if (!_currentUserService.UserId.HasValue)

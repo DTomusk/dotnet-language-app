@@ -1,6 +1,7 @@
 ﻿using Api.Auth.Validators;
 using Api.Submissions.Validators;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -14,6 +15,7 @@ public static class Register
         IConfiguration configuration)
     {
         // FluentValidation
+        services.AddFluentValidationAutoValidation();
         services.AddValidatorsFromAssemblyContaining<CreateSubmissionRequestValidator>();
         services.AddValidatorsFromAssemblyContaining<RegisterUserRequestValidator>();
 

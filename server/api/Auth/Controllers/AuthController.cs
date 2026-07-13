@@ -13,26 +13,21 @@ public class AuthController : ControllerBase
 {
     private readonly ICommandHandler<LoginUserCommand, AuthResponse> _loginHandler;
     private readonly ICommandHandler<RegisterUserCommand, AuthResponse> _registerHandler;
-    private readonly IValidator<RegisterUserRequest> _registerValidator;
 
     public AuthController(
         ICommandHandler<LoginUserCommand, AuthResponse> loginHandler,
-        ICommandHandler<RegisterUserCommand, AuthResponse> registerHandler,
-        IValidator<RegisterUserRequest> registerValidator)
+        ICommandHandler<RegisterUserCommand, AuthResponse> registerHandler)
     {
         _loginHandler = loginHandler;
         _registerHandler = registerHandler;
-        _registerValidator = registerValidator;
     }
 
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponse>> Register(RegisterUserRequest request, CancellationToken cancellationToken)
     {
-        var validationResult = await _registerValidator.ValidateAsync(request, cancellationToken);
-
-        if (!validationResult.IsValid)
+        if (!ModelState.IsValid)
         {
-            return BadRequest(validationResult.Errors);
+            return BadRequest(ModelState);
         }
 
         try
