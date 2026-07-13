@@ -19,3 +19,8 @@ There are a couple of moving pieces here that we can tackle separately. First of
 I'm going to start with the event and then the event consumer. The event only needs to store the submission id for now, we don't know who a submission was made by (plus the submission will have the user if we need it anyway). We want to analyse the submission in a vacuum, later we can add more context. I just want to keep it as simple as possible. 
 
 On second thought, if the event handler is just going to query the text immediately anyway, then we could just send the content, plus it may be useful to have a snapshot of the data at the time. I think it doesn't make too much of a difference, but the fewer dependencies the analyser has the better. 
+
+## Language analysis data structure 
+We can get a lot of data out of a language submission, and I don't expect we'll capture everything we will get in this first slice. 
+
+Words (tokens) have lemmas. What do we want to happen when we analyse a sentence? I'm going to start by assuming completely "correct" sentences in the sense of the words involved. 
