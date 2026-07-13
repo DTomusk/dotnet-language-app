@@ -29,6 +29,8 @@ public sealed record Result<T> : Result
     private Result(bool isSuccess, T? value, Error? error)
         : base(isSuccess, error)
     {
+        if (isSuccess && value is null)
+            throw new InvalidOperationException("A successful result must have a value.");
         Value = value;
     }
     public static Result<T> Success(T value) => new Result<T>(true, value, null);
