@@ -3,6 +3,7 @@ using Application.Shared.Interfaces;
 using Application.Submissions.Commands;
 using Application.Submissions.Interfaces;
 using Domain.LanguagePractice.Entities;
+using Domain.LanguagePractice.Events;
 using Domain.Shared.Results;
 
 namespace Application.Submissions.Handlers;
@@ -11,15 +12,18 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
 {
     private readonly ISubmissionRepository _submissionRepository;
     private readonly ILanguageLearnerRepository _languageLearnerRepository;
+    private readonly IDomainEventPublisher _eventPublisher;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateSubmissionCommandHandler(
         ISubmissionRepository submissionRepository,
         ILanguageLearnerRepository languageLearnerRepository,
+        IDomainEventPublisher eventPublisher,
         IUnitOfWork unitOfWork)
     {
         _submissionRepository = submissionRepository;
         _languageLearnerRepository = languageLearnerRepository;
+        _eventPublisher = eventPublisher;
         _unitOfWork = unitOfWork;
     }
 
@@ -40,6 +44,14 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
         var submission = Submission.Create(command.UserID, languageCode, command.Text);
 
         await _submissionRepository.CreateAsync(submission, cancellationToken);
+
+        var @event = new LanguageSubmissionCreatedEvent
+        {
+            LanguageCode = languageCode,
+            SubmissionText = command.Text
+        };
+
+        await _eventPublisher.PublishAsync(@event, cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 

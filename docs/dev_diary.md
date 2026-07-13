@@ -16,4 +16,6 @@ Current thoughts: event stores submission id. Event table doesn't store submissi
 ## Plan
 There are a couple of moving pieces here that we can tackle separately. First off, there's a language submission event to raise when a language submission gets created. We'll need an event handler to handle that event. The event handler will depend on a language processor interface, the implementation of which will be a python service that could be built with fastapi, but we can use a dummy service for now. We'll want to start thinking about the shape of the data that the service returns. The python service should return structured data that the processing service can save in the database somewhere. 
 
-I'm going to start with the event and then the event consumer. 
+I'm going to start with the event and then the event consumer. The event only needs to store the submission id for now, we don't know who a submission was made by (plus the submission will have the user if we need it anyway). We want to analyse the submission in a vacuum, later we can add more context. I just want to keep it as simple as possible. 
+
+On second thought, if the event handler is just going to query the text immediately anyway, then we could just send the content, plus it may be useful to have a snapshot of the data at the time. I think it doesn't make too much of a difference, but the fewer dependencies the analyser has the better. 
