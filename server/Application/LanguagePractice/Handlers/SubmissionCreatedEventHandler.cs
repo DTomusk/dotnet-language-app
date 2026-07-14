@@ -2,6 +2,7 @@
 using Application.Shared.Interfaces;
 using Domain.LanguagePractice.Entities;
 using Domain.LanguagePractice.Events;
+using Domain.LanguagePractice.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 namespace Application.LanguagePractice.Handlers;
@@ -25,6 +26,8 @@ public class SubmissionCreatedEventHandler : IEventHandler<LanguageSubmissionCre
     {
         _logger.LogInformation("Handling LanguageSubmissionCreatedEvent for SubmissionId: {SubmissionId}", @event.SubmissionId);
 
+        var languageCode = LanguageCode.From(@event.LanguageCode);
+
         // Idempotency: check we haven't already analysed this submission
         var existingAnalysis = await _analysisRepo.GetLanguageAnalysisBySubmissionIdAsync(@event.SubmissionId, cancellationToken);
         if (existingAnalysis != null && existingAnalysis.Status == LanguageAnalysisStatus.Completed)
@@ -35,7 +38,7 @@ public class SubmissionCreatedEventHandler : IEventHandler<LanguageSubmissionCre
 
         if (existingAnalysis == null)
         {
-            var analysisCreateResult = LanguageAnalysis.Create(@event.SubmissionId, @event.UserId, @event.LanguageCode);
+            var analysisCreateResult = LanguageAnalysis.Create(@event.SubmissionId, @event.UserId, languageCode);
 
             if (!analysisCreateResult.IsSuccess)
             {
@@ -46,7 +49,7 @@ public class SubmissionCreatedEventHandler : IEventHandler<LanguageSubmissionCre
             existingAnalysis = await _analysisRepo.CreateLanguageAnalysisAsync(analysisCreateResult.Value, cancellationToken);
         }
 
-        var responseResult = await _analysisService.AnalyseTextAsync(@event.LanguageCode, @event.SubmissionText, cancellationToken);
+        var responseResult = await _analysisService.AnalyseTextAsync(languageCode, @event.SubmissionText, cancellationToken);
 
         if (responseResult.IsFailure)
         {

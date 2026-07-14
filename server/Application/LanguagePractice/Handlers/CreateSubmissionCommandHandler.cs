@@ -47,7 +47,9 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
 
         var @event = new LanguageSubmissionCreatedEvent
         {
-            LanguageCode = languageCode,
+            SubmissionId = submission.Id,
+            UserId = command.UserID,
+            LanguageCode = languageCode.ToString(),
             SubmissionText = command.Text
         };
 
