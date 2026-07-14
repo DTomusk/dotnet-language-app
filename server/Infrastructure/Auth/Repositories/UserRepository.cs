@@ -3,7 +3,7 @@ using Domain.Auth.Entities;
 using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Auth;
+namespace Infrastructure.Auth.Repositories;
 
 public class UserRepository : IUserRepository
 {

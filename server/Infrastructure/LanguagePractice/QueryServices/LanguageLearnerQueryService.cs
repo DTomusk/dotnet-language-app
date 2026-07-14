@@ -3,7 +3,7 @@ using Domain.LanguagePractice.ValueObjects;
 using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.LanguagePractice;
+namespace Infrastructure.LanguagePractice.QueryServices;
 
 public class LanguageLearnerQueryService : ILanguageLearnerQueryService
 {

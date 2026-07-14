@@ -2,7 +2,7 @@
 using Domain.LanguagePractice.Entities;
 using Infrastructure.Shared;
 
-namespace Infrastructure.LanguagePractice;
+namespace Infrastructure.LanguagePractice.Repositories;
 
 public class LanguageLearnerRepository : ILanguageLearnerRepository
 {

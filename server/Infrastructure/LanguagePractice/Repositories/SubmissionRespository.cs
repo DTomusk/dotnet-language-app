@@ -2,7 +2,7 @@
 using Domain.LanguagePractice.Entities;
 using Infrastructure.Shared;
 
-namespace Infrastructure.Submissions;
+namespace Infrastructure.LanguagePractice.Repositories;
 
 public class SubmissionRespository : ISubmissionRepository
 {

@@ -3,7 +3,7 @@ using Application.Submissions.Interfaces;
 using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Submissions;
+namespace Infrastructure.LanguagePractice.QueryServices;
 
 public class SubmissionQueryService : ISubmissionQueryService
 {

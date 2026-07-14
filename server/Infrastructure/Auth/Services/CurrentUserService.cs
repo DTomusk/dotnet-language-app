@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Infrastructure.Auth;
+namespace Infrastructure.Auth.Services;
 
 public class CurrentUserService : ICurrentUserService
 {

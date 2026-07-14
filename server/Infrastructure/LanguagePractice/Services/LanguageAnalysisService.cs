@@ -3,7 +3,7 @@ using Application.LanguagePractice.Interfaces;
 using Domain.LanguagePractice.ValueObjects;
 using Domain.Shared.Results;
 
-namespace Infrastructure.LanguagePractice;
+namespace Infrastructure.LanguagePractice.Services;
 
 public class LanguageAnalysisService : ILanguageAnalysisService
 {

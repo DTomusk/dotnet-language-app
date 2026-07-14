@@ -1,7 +1,7 @@
 ﻿using Application.LanguagePractice.Interfaces;
 using Domain.LanguagePractice.Entities;
 
-namespace Infrastructure.LanguagePractice;
+namespace Infrastructure.LanguagePractice.Repositories;
 
 public class LanguageAnalysisRepository : ILanguageAnalysisRepository
 {
