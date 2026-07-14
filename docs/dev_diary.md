@@ -1,3 +1,15 @@
+# 2026-07-14
+## Idempotency and atomicity 
+How should event handlers deal with failure? That's a good question. 
+
+Let's take the example I'm working on right now. We have a text analyser. This creates an analysis entity. The idempotency service should ensure that an event is handled by a handler just once. Before invoking the handler, we check whether that handler has handled that specific event and then decide whether to do it. Therefore, an event handler should throw if it has failed and we want the dispatcher to retry. 
+
+What is each service's responsibility in this flow? 
+- Event publisher: ensures atomicity between the change that triggers the event and the publishing of the event. E.g. user gets created and user created event raised, if user gets created, then the event was raised. It's either both or neither. Creates event. 
+- Outbox processor: polls events to send them to dispatcher. Marks events as delivered once it knows that the event has been delivered at least once. This means that an event could reach the dispatcher multiple times. 
+- Dispatcher: invokes the handler on each registered handler for an event type. Checks idempotency service to see whether that handler has handled that specific event already. If handler throws an exception, we should mark it as a failure and retry (potentially with exponential back-off). If handler doesn't throw, then we assume the event has been handled correctly, so we mark the event as handled in the idempotency service. 
+- Event handler: handles a specific reaction to an event. If this throws, it's a failure, otherwise it's a success (from the dispatcher's point of view). For now, we rely on dispatcher retries to deal with transient failures in event handlers. Later, we can think about whether we need clean-up jobs. 
+
 # 2026-07-13 Language analysis
 ## Branching 
 I feel like the solution has reached a level of maturity that I can start branching now and working on feature branches. Earlier, I was just pushing everything straight to main, and, while I could keep doing that, branching helps to keep my changes focused and self-contained. If something goes irreparably wrong, I can just get rid of the branch, and it should also help focus my commit history in main (as long as I limit merge types). 

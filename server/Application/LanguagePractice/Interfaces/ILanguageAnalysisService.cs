@@ -6,5 +6,5 @@ namespace Application.LanguagePractice.Interfaces;
 
 public interface ILanguageAnalysisService
 {
-    Task<Result<AnalysisResponse>> AnalyseText(LanguageCode languageCode, string text);
+    Task<Result<AnalysisResponse>> AnalyseTextAsync(LanguageCode languageCode, string text, CancellationToken cancellationToken = default);
 }

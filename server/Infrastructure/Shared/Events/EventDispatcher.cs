@@ -88,6 +88,8 @@ public class EventDispatcher
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error handling event {EventType} with handler {HandlerType}.", eventType, handler.GetType().Name);
+                // Throwing causes the outbox processor to mark the event as a failure
+                // Any event handler combination that succeeded will be skipped in retries
                 throw;
             }
         }

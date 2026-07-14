@@ -50,6 +50,7 @@ public class LanguageAnalysis
 }
 
 // TODO: we may want this to be a shared status enum? 
+// TODO: consider in progress status
 public enum LanguageAnalysisStatus
 {
     Pending,
