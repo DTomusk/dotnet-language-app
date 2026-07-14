@@ -10,7 +10,7 @@ public class LanguageAnalysis
     public Guid Id { get; init; }
     public Guid SubmissionId { get; init; }
     public Guid UserId { get; init; }
-    public LanguageCode Language { get; init; }
+    public LanguageCode LanguageCode { get; init; }
     public LanguageAnalysisStatus Status { get; private set; }
     public DateTime StartedAt { get; init; }
     public DateTime? CompletedAt { get; private set; }
@@ -23,7 +23,7 @@ public class LanguageAnalysis
             Id = Guid.NewGuid(),
             SubmissionId = submissionId,
             UserId = userId,
-            Language = language,
+            LanguageCode = language,
             Status = LanguageAnalysisStatus.Pending,
             StartedAt = DateTime.UtcNow
         };

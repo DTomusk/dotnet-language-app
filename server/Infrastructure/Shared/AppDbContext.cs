@@ -23,6 +23,8 @@ public class AppDbContext : DbContext
 
     public DbSet<ProcessedEvent> ProcessedEvents => Set<ProcessedEvent>();
 
+    public DbSet<LanguageAnalysis> LanguageAnalysis => Set<LanguageAnalysis>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -112,6 +114,49 @@ public class AppDbContext : DbContext
                 .HasMaxLength(200);
             entity.Property(e => e.ProcessedAt)
                 .IsRequired();
+        });
+
+        // Configure LanguageAnalysis entity
+        modelBuilder.Entity<LanguageAnalysis>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.LanguageCode)
+                .HasConversion(languageCodeConverter)
+                .IsRequired()
+                .HasMaxLength(10);
+
+            // Configure the relationship between LanguageAnalysis and Submission
+            entity.HasOne<Submission>()
+                .WithMany()
+                .HasForeignKey(e => e.SubmissionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure the relationship between LanguageAnalysis and User
+            entity.HasOne<User>()
+                .WithOne()
+                .HasForeignKey<LanguageAnalysis>(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(50);
+
+            entity.Property(e => e.StartedAt)
+                .IsRequired();
+
+            entity.Property(e => e.CompletedAt)
+                .IsRequired(false);
+
+            // Configure Tokens collection as owned entities
+            entity.OwnsMany(e => e.Tokens, tokensBuilder =>
+            {
+                tokensBuilder.ToTable("AnalysisTokens");
+                tokensBuilder.WithOwner().HasForeignKey("LanguageAnalysisId");
+                tokensBuilder.Property<Guid>("Id").ValueGeneratedOnAdd();
+                tokensBuilder.HasKey("Id");
+            });
         });
     }
 }

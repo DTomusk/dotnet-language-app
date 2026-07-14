@@ -37,6 +37,8 @@ public static class Register
         services.AddScoped<EventDispatcher, EventDispatcher>();
         services.AddScoped<IIdempotencyService, IdempotencyService>();
         services.AddScoped<ILanguageLearnerQueryService, LanguageLearnerQueryService>();
+        services.AddScoped<ILanguageAnalysisService, LanguageAnalysisService>();
+        services.AddScoped<ILanguageAnalysisRepository, LanguageAnalysisRepository>();
 
         // Automatically starts the outbox processor service when the application starts
         services.AddHostedService<OutboxProcessorService>();

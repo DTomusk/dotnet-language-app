@@ -10,6 +10,7 @@ using Application.Submissions.DTOs;
 using Application.Submissions.Handlers;
 using Application.Submissions.Queries;
 using Domain.Auth.Events;
+using Domain.LanguagePractice.Events;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.IoC;
@@ -26,6 +27,7 @@ public static class Register
         services.AddScoped<IQueryHandler<GetUserLanguageQuery, string>, GetUserLanguageQueryHandler>();
 
         services.AddScoped<IEventHandler<UserCreatedEvent>, UserCreatedEventHandler>();
+        services.AddScoped<IEventHandler<LanguageSubmissionCreatedEvent>, SubmissionCreatedEventHandler>();
 
         return services;
     }
