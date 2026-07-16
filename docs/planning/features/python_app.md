@@ -1,0 +1,17 @@
+# Python language analysis 
+Want to build a language analysis service that can be called by the main server (both in synchronous requests and in the background as part of event handling). 
+
+This will be a rest api that the server can call. We may move to gRPC later if we need to, but that's too much overhead for an MVP. 
+
+## Slice 1
+The first deliverable is a service that integrates with the server and does some meaningful work. The most basic thing we could do is return the lemmas from a sentence. Even that is a lot of work. Whether something counts as a sentence is a large question, and so is what validation we need to do beforehand to ensure that. For now, we're going to consider quite a happy path where we test with actual sentences in the target language, and later we'll start trying to break it (sentences in different languages, random text, empty strings, strings that are too long, spelling mistakes, words that mean different things in different contexts, etc.).
+
+## Outcome
+Given a user has created a submission, when the submission is analysed, the SubmissionAnalysis entity stores the lemmas from the submission
+
+### Step 1
+Outcome: locally running python rest api with hardcoded language model that lemmatises a string in one language
+
+Requirements: 
+- NLP service with model loaded
+- request and response models 
