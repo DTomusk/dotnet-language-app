@@ -1,4 +1,5 @@
 ﻿using Application.LanguagePractice.Interfaces;
+using Application.Shared.Interfaces;
 using Application.Submissions.Interfaces;
 using Infrastructure.LanguagePractice.QueryServices;
 using Infrastructure.LanguagePractice.Repositories;
@@ -17,6 +18,7 @@ public static class Register
         services.AddScoped<ILanguageLearnerQueryService, LanguageLearnerQueryService>();
         services.AddScoped<ILanguageAnalysisService, LanguageAnalysisService>();
         services.AddScoped<ILanguageAnalysisRepository, LanguageAnalysisRepository>();
+        services.AddScoped<IHealthCheck, LanguageAnalysisService>();
         return services;
     }
 }

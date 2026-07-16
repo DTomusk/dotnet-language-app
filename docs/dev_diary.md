@@ -6,6 +6,12 @@ I'm going to add a validation pipeline later. That's going to run synchronously 
 
 For the analysis service, we want valid language codes and schema based validation. Right now, the valid language codes is limited to "it" and is hardcoded. Later, we may want a better way of managing language codes and language models, but honestly hardcoded could be fine for a while. The most important thing is to get out of functions as fast as possible to save unnecessary calls and work, so use guards, normalization, validation etc. 
 
+## Shared types 
+For a moment, I was considering adding some tooling to export the python app's openapi definitions into the codebase and generate c# types from that, but I think for now, to keep it simple, I'm just going to handwrite the types and make sure they match up manually. If this becomes burdensome, I can introduce tooling, but I don't think it's much overhead to handwrite stuff and I don't think there will be enough types for a while to warrant adding some kind of generation tooling. 
+
+## Health check
+Before I can do any real, meaningful integration with my external python app, I want to be confident that I can query the python app. To this end, I want to implement health checks. I've created a new health check controller and a health check interface. Each external dependency will implement this interface, and then the health check controller will return whether everything is ready or not, as well as the individual status of each. After this step, I will be confident that I can use my .net server to call my python app, so then that's when the fun begins. 
+
 # 2026-07-15
 ## Python 
 Strictly speaking, I shouldn't need the python language processing service implemented in order to verify the event handler I have for language analysis, but at the same time, it would be helpful for me to play around with actual language analysis so I can better design the data structures that my analysis will be dealing with. 

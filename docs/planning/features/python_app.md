@@ -24,4 +24,6 @@ Outcome: tokenize a string in a request body
 Outcome: replace tokenization with lemmatization
 
 ### Step 4: 
-Outcome: define shared contract between .net server and python app for analysis response 
+Outcome: synchronous .net method can call python app api
+
+Add synchronous endpoint call to integrate .net app with python app. This can just be a healthcheck endpoint for now. I want to run both the .net server and the python app locally, but soon I'll want to containerise the python app (and potentially the .net server).

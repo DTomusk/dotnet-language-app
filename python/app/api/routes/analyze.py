@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request
 from app.schemas.analyze import AnalyzeRequest, AnalyzeResponse
 from app.services.nlp import analyze_text, get_or_load_model, UnsupportedLanguageError
 

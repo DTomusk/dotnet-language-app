@@ -4,4 +4,4 @@ router = APIRouter(tags=["health"])
 
 @router.get("/")
 def root():
-    return {"message": "Hello, FastAPI!"}
+    return {"status": "healthy"}
