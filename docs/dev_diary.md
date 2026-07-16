@@ -1,3 +1,13 @@
+# 2026-07-15
+## Python 
+Strictly speaking, I shouldn't need the python language processing service implemented in order to verify the event handler I have for language analysis, but at the same time, it would be helpful for me to play around with actual language analysis so I can better design the data structures that my analysis will be dealing with. 
+
+A language analysis is an entity and an aggregate root. A language analysis is done for a submission. It will contain lemmas (which are value objects), as well as other data later on (grammatical mistakes, that kind of stuff). An analysis completing will trigger another event to update aggregated data on a user's vocabulary and other stats that are extracted from the full set of a user's submissions and not just one analysis. 
+
+I want to build a Python FastAPI app that runs in Docker. I'm planning on using spacy for NLP, but I could use stanza as well. I don't think it matters too much at this point, and I've heard spacy is faster. We can always reevaluate later, right now we're firmly in PoC territory. Basically, I just want to play around with NLP and see what data I can extract from a given text, and what of that I would like to store. It should be minimal to start with, just something that I can get my teeth into and extract some value from. 
+
+I will start by querying the FastAPI app manually locally. Later I will implement an ILanguageAnalysisService in my .Net server that wraps an http client that connects to the FastAPI app. By that time, I would like to have determined exactly what data I'm capturing. Once I have the python app set up, I can also run integration tests against it. My thinking is that the python app doesn't need to deal with persistence at all. It will just take data in and spit data out. 
+
 # 2026-07-14
 ## Idempotency and atomicity 
 How should event handlers deal with failure? That's a good question. 
