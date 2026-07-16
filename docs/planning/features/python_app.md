@@ -10,8 +10,7 @@ The first deliverable is a service that integrates with the server and does some
 Given a user has created a submission, when the submission is analysed, the SubmissionAnalysis entity stores the lemmas from the submission
 
 ### Step 1
-Outcome: locally running python rest api with hardcoded language model that lemmatises a string in one language
+Outcome: locally running python rest api with hardcoded language model that tokenizes a hardcoded string in one language
 
 Requirements: 
-- NLP service with model loaded
-- request and response models 
+- 
