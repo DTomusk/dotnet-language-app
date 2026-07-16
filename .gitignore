@@ -57,4 +57,4 @@ TestResult.xml
 nunit-*.xml
 /server/.vs
 /.vs/CopilotSnapshots/EF22E90E0E350A42B85A56CF1C4944FB
-python/app/__pycache__/
+python/app/**/__pycache__/

@@ -13,4 +13,6 @@ Given a user has created a submission, when the submission is analysed, the Subm
 Outcome: locally running python rest api with hardcoded language model that tokenizes a hardcoded string in one language
 
 Requirements: 
-- 
+- spacy installed and language model downloaded 
+- fastapi endpoint that returns hardcoded string's tokens by running empty pipeline 
+- app lifecycle to download language model once 
