@@ -1,3 +1,7 @@
+# 2026-07-16
+## Spacy
+I'm very excited to be running NLP pipelines now. There's so much information it can extract from text, so there are lots of directions in which the langauge analysis can go. For now, I want to focus on vocabulary, which will be based on lemmas (ran, runs, running aren't separate vocab). Later I can add more stuff, but I think this is the MVP. 
+
 # 2026-07-15
 ## Python 
 Strictly speaking, I shouldn't need the python language processing service implemented in order to verify the event handler I have for language analysis, but at the same time, it would be helpful for me to play around with actual language analysis so I can better design the data structures that my analysis will be dealing with. 

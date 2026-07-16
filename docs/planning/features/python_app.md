@@ -9,10 +9,19 @@ The first deliverable is a service that integrates with the server and does some
 ## Outcome
 Given a user has created a submission, when the submission is analysed, the SubmissionAnalysis entity stores the lemmas from the submission
 
-### Step 1
+### Step 1: DONE
 Outcome: locally running python rest api with hardcoded language model that tokenizes a hardcoded string in one language
 
 Requirements: 
 - spacy installed and language model downloaded 
 - fastapi endpoint that returns hardcoded string's tokens by running empty pipeline 
 - app lifecycle to download language model once 
+
+### Step 2: DONE
+Outcome: tokenize a string in a request body
+
+### Step 3: DONE
+Outcome: replace tokenization with lemmatization
+
+### Step 4: 
+Outcome: define shared contract between .net server and python app for analysis response 
