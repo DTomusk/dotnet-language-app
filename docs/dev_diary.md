@@ -2,6 +2,10 @@
 ## Spacy
 I'm very excited to be running NLP pipelines now. There's so much information it can extract from text, so there are lots of directions in which the langauge analysis can go. For now, I want to focus on vocabulary, which will be based on lemmas (ran, runs, running aren't separate vocab). Later I can add more stuff, but I think this is the MVP. 
 
+I'm going to add a validation pipeline later. That's going to run synchronously when a user creates a submission. This is to ensure that there's less pressure to validate data entering the analyzer, and that users get instant feedback on their submissions. For now, I'm going to wait. Later I will build a separate submission validation service that will have a bunch of guards for stuff like proportion of spaces, certain punctuation, certain characters, and once the submission has passed all of that, it will be handed off to an external validation service that runs a language recogniser just to check that it's using the expected language. 
+
+For the analysis service, we want valid language codes and schema based validation. Right now, the valid language codes is limited to "it" and is hardcoded. Later, we may want a better way of managing language codes and language models, but honestly hardcoded could be fine for a while. The most important thing is to get out of functions as fast as possible to save unnecessary calls and work, so use guards, normalization, validation etc. 
+
 # 2026-07-15
 ## Python 
 Strictly speaking, I shouldn't need the python language processing service implemented in order to verify the event handler I have for language analysis, but at the same time, it would be helpful for me to play around with actual language analysis so I can better design the data structures that my analysis will be dealing with. 
