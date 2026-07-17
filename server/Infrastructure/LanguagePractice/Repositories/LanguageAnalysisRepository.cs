@@ -1,22 +1,32 @@
 ﻿using Application.LanguagePractice.Interfaces;
 using Domain.LanguagePractice.Entities;
+using Infrastructure.Shared;
 
 namespace Infrastructure.LanguagePractice.Repositories;
 
 public class LanguageAnalysisRepository : ILanguageAnalysisRepository
 {
-    public Task<LanguageAnalysis> CreateLanguageAnalysisAsync(LanguageAnalysis languageAnalysis, CancellationToken cancellation = default)
+    private readonly AppDbContext _context;
+
+    public LanguageAnalysisRepository(AppDbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task<LanguageAnalysis?> GetLanguageAnalysisBySubmissionIdAsync(Guid submissionId, CancellationToken cancellationToken = default)
+    public async Task<LanguageAnalysis> CreateLanguageAnalysisAsync(LanguageAnalysis languageAnalysis, CancellationToken cancellation = default)
     {
-        throw new NotImplementedException();
+        _context.LanguageAnalysis.Add(languageAnalysis);
+        return languageAnalysis;
     }
 
-    public Task<LanguageAnalysis> UpdateLanguageAnalysisAsync(LanguageAnalysis languageAnalysis, CancellationToken cancellation = default)
+    public async Task<LanguageAnalysis?> GetLanguageAnalysisBySubmissionIdAsync(Guid submissionId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await _context.LanguageAnalysis.FindAsync(new object[] { submissionId }, cancellationToken);
+    }
+
+    public async Task<LanguageAnalysis> UpdateLanguageAnalysisAsync(LanguageAnalysis languageAnalysis, CancellationToken cancellation = default)
+    {
+        _context.LanguageAnalysis.Update(languageAnalysis);
+        return languageAnalysis;
     }
 }

@@ -11,14 +11,17 @@ public class SubmissionCreatedEventHandler : IEventHandler<LanguageSubmissionCre
 {
     private readonly ILanguageAnalysisService _analysisService;
     private readonly ILanguageAnalysisRepository _analysisRepo;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<SubmissionCreatedEventHandler> _logger;
 
     public SubmissionCreatedEventHandler(ILanguageAnalysisService analysisService,
         ILanguageAnalysisRepository analysisRepo,
+        IUnitOfWork unitOfWork,
         ILogger<SubmissionCreatedEventHandler> logger)
     {
         _analysisService = analysisService;
         _analysisRepo = analysisRepo;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -47,6 +50,7 @@ public class SubmissionCreatedEventHandler : IEventHandler<LanguageSubmissionCre
             }
 
             existingAnalysis = await _analysisRepo.CreateLanguageAnalysisAsync(analysisCreateResult.Value, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
         }
 
         var responseResult = await _analysisService.AnalyseTextAsync(languageCode, @event.SubmissionText, cancellationToken);

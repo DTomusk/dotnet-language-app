@@ -134,8 +134,8 @@ public class AppDbContext : DbContext
 
             // Configure the relationship between LanguageAnalysis and User
             entity.HasOne<User>()
-                .WithOne()
-                .HasForeignKey<LanguageAnalysis>(e => e.UserId)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.Property(e => e.Status)
