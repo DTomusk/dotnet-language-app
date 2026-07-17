@@ -42,6 +42,7 @@ public class LanguageLearner
 
     public Result UpdateLemmaStatistics(IEnumerable<Lemma> newLemmas)
     {
+        // TODO: should we explicitly pass in what language these are in? 
         if (ActiveLanguage == null)
             return Result.Failure(new Error("ActiveLanguage must be set before updating lemma statistics.", ErrorType.Validation));
 

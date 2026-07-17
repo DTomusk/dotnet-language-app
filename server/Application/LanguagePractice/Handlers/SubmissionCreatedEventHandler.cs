@@ -12,16 +12,19 @@ public class SubmissionCreatedEventHandler : IEventHandler<LanguageSubmissionCre
     private readonly ILanguageAnalysisService _analysisService;
     private readonly ILanguageAnalysisRepository _analysisRepo;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IDomainEventPublisher _eventPublisher;
     private readonly ILogger<SubmissionCreatedEventHandler> _logger;
 
     public SubmissionCreatedEventHandler(ILanguageAnalysisService analysisService,
         ILanguageAnalysisRepository analysisRepo,
         IUnitOfWork unitOfWork,
+        IDomainEventPublisher eventPublisher,
         ILogger<SubmissionCreatedEventHandler> logger)
     {
         _analysisService = analysisService;
         _analysisRepo = analysisRepo;
         _unitOfWork = unitOfWork;
+        _eventPublisher = eventPublisher;
         _logger = logger;
     }
 
@@ -65,9 +68,10 @@ public class SubmissionCreatedEventHandler : IEventHandler<LanguageSubmissionCre
 
         // Update the analysis entity with the results and persist 
         existingAnalysis.AddLemmas(responseResult.Value.Lemmas.Select(l => new Lemma(l)));
-        await _analysisRepo.UpdateLanguageAnalysisAsync(existingAnalysis, cancellationToken);
-        await _unitOfWork.CommitAsync(cancellationToken);
 
-        // Raise new event for processing user's vocabulary
+        await _analysisRepo.UpdateLanguageAnalysisAsync(existingAnalysis, cancellationToken);
+        await _eventPublisher.PublishAsync(new LanguageSubmissionAnalysedEvent { AnalysisId = existingAnalysis.Id }, cancellationToken);
+
+        await _unitOfWork.CommitAsync(cancellationToken);
     }
 }
