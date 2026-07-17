@@ -87,6 +87,32 @@ public class AppDbContext : DbContext
                 .WithOne()
                 .HasForeignKey<LanguageLearner>(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.OwnsMany(e => e.LemmaStatistics, statsBuilder =>
+            {
+                statsBuilder.ToTable("LearnerLemmaStatistics");
+                statsBuilder.WithOwner().HasForeignKey("LanguageLearnerId");
+
+                statsBuilder.Property(l => l.Text)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                statsBuilder.Property(l => l.LanguageCode)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                statsBuilder.Property(l => l.Frequency)
+                    .IsRequired();
+
+                statsBuilder.Property(l => l.FirstUsedAt)
+                    .IsRequired();
+
+                statsBuilder.Property(l => l.LastUsedAt)
+                    .IsRequired();
+
+                statsBuilder.Property<Guid>("Id").ValueGeneratedOnAdd();
+                statsBuilder.HasKey("Id");
+            });
         });
 
         // Configure OutboxMessage entity

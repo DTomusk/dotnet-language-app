@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260717200923_AddLemmaStatsToUser")]
+    partial class AddLemmaStatsToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,11 +244,6 @@ namespace Infrastructure.Data.Migrations
                             b1.Property<int>("Frequency")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("LanguageCode")
-                                .IsRequired()
-                                .HasMaxLength(10)
-                                .HasColumnType("character varying(10)");
-
                             b1.Property<Guid>("LanguageLearnerId")
                                 .HasColumnType("uuid");
 
@@ -256,6 +254,9 @@ namespace Infrastructure.Data.Migrations
                                 .IsRequired()
                                 .HasMaxLength(255)
                                 .HasColumnType("character varying(255)");
+
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
 
                             b1.HasKey("Id");
 
