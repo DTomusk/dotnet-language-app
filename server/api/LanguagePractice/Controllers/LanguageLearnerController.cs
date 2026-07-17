@@ -4,6 +4,7 @@ using Application.Auth.Interfaces;
 using Application.LanguagePractice.Commands;
 using Application.LanguagePractice.Queries;
 using Application.Shared.Interfaces;
+using Domain.LanguagePractice.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +17,17 @@ public class LanguageLearnerController : AuthenticatedControllerBase
 {
     private readonly ICommandHandler<SetPracticeLanguageCommand> _setPracticeLanguageCommandHandler;
     private readonly IQueryHandler<GetUserLanguageQuery, string> _getUserLanguageQueryHandler;
+    private readonly IQueryHandler<GetLemmaStatsQuery, IEnumerable<LemmaStatistic>> _getLemmaStatsQueryHandler;
 
     public LanguageLearnerController(ICurrentUserService currentUserService, 
         ICommandHandler<SetPracticeLanguageCommand> setPracticeLanguageCommandHandler,
-        IQueryHandler<GetUserLanguageQuery, string> getUserLanguageQueryHandler)
+        IQueryHandler<GetUserLanguageQuery, string> getUserLanguageQueryHandler,
+        IQueryHandler<GetLemmaStatsQuery, IEnumerable<LemmaStatistic>> getLemmaStatsQueryHandler)
         : base(currentUserService)
     {
         _setPracticeLanguageCommandHandler = setPracticeLanguageCommandHandler;
         _getUserLanguageQueryHandler = getUserLanguageQueryHandler;
+        _getLemmaStatsQueryHandler = getLemmaStatsQueryHandler;
     }
 
     [HttpGet(Name = "GetPracticeLanguage")]
@@ -44,5 +48,13 @@ public class LanguageLearnerController : AuthenticatedControllerBase
         var result = await _setPracticeLanguageCommandHandler.HandleAsync(command);
 
         return result.ToActionResult();
+    }
+
+    [HttpGet("LemmaStats", Name = "GetLemmaStats")]
+    public async Task<IActionResult> GetLemmaStats(CancellationToken cancellationToken)
+    {
+        var query = new GetLemmaStatsQuery(CurrentUserId);
+        var lemmaStats = await _getLemmaStatsQueryHandler.HandleAsync(query, cancellationToken);
+        return Ok(lemmaStats);
     }
 }

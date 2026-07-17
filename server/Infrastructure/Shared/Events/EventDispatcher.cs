@@ -28,6 +28,7 @@ public class EventDispatcher
         // Register all event types here
         _eventTypes["UserCreatedEvent"] = typeof(UserCreatedEvent);
         _eventTypes["LanguageSubmissionCreatedEvent"] = typeof(LanguageSubmissionCreatedEvent);
+        _eventTypes["LanguageSubmissionAnalysedEvent"] = typeof(LanguageSubmissionAnalysedEvent);
     }
 
     /// <summary>
