@@ -14,7 +14,7 @@ public class LanguageAnalysis
     public LanguageAnalysisStatus Status { get; private set; }
     public DateTime StartedAt { get; init; }
     public DateTime? CompletedAt { get; private set; }
-    public IEnumerable<Lemma> Lemmas { get; private set; } = new List<Lemma>();
+    public ICollection<Lemma> Lemmas { get; private set; } = new List<Lemma>();
 
     public static Result<LanguageAnalysis> Create(Guid submissionId, Guid userId, LanguageCode language)
     {
@@ -45,7 +45,10 @@ public class LanguageAnalysis
 
     public void AddLemmas(IEnumerable<Lemma> lemmas)
     {
-        Lemmas = Lemmas.Concat(lemmas);
+        foreach (var lemma in lemmas)
+        {
+            Lemmas.Add(lemma);
+        }
     }
 }
 
