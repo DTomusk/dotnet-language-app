@@ -1,6 +1,7 @@
 ﻿using Application.LanguagePractice.Interfaces;
 using Domain.LanguagePractice.Entities;
 using Infrastructure.Shared;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.LanguagePractice.Repositories;
 

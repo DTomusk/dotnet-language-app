@@ -13,6 +13,11 @@ public class LanguageAnalysisRepository : ILanguageAnalysisRepository
         _context = context;
     }
 
+    public async Task<LanguageAnalysis?> GetLanguageAnalysisAsync(Guid analysisId, CancellationToken cancellationToken = default)
+    {
+        return await _context.LanguageAnalysis.FindAsync(new object[] { analysisId }, cancellationToken);
+    }
+
     public async Task<LanguageAnalysis> CreateLanguageAnalysisAsync(LanguageAnalysis languageAnalysis, CancellationToken cancellation = default)
     {
         _context.LanguageAnalysis.Add(languageAnalysis);
