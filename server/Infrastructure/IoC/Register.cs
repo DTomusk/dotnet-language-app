@@ -10,7 +10,7 @@ public static class Register
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddLanguagePracticeInfrastructureServices();
+        services.AddLanguagePracticeInfrastructureServices(configuration);
         services.AddAuthInfrastructureServices(configuration);
         services.AddSharedInfrastructureServices(configuration);
 

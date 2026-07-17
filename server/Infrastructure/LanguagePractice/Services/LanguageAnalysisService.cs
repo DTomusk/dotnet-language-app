@@ -8,6 +8,13 @@ namespace Infrastructure.LanguagePractice.Services;
 
 public class LanguageAnalysisService : ILanguageAnalysisService, IHealthCheck
 {
+    private readonly HttpClient _httpClient;
+
+    public LanguageAnalysisService(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
     public Task<Result<AnalysisResponse>> AnalyseTextAsync(LanguageCode languageCode, string text, CancellationToken cancellationToken = default)
     {
         // TODO: this is obviously very stupid
@@ -17,6 +24,14 @@ public class LanguageAnalysisService : ILanguageAnalysisService, IHealthCheck
 
     public async Task<HealthCheckResult> IsHealthy()
     {
-        return await Task.FromResult(new HealthCheckResult("LanguageAnalysisService", true));
+        try
+        {
+            var response = await _httpClient.GetAsync("/health");
+            return new HealthCheckResult("LanguageAnalysisService", response.IsSuccessStatusCode);
+        }
+        catch
+        {
+            return new HealthCheckResult("LanguageAnalysisService", false);
+        }
     }
 }
