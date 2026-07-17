@@ -149,10 +149,10 @@ public class AppDbContext : DbContext
             entity.Property(e => e.CompletedAt)
                 .IsRequired(false);
 
-            // Configure Tokens collection as owned entities
-            entity.OwnsMany(e => e.Tokens, tokensBuilder =>
+            // Configure Lemmas collection as owned entities
+            entity.OwnsMany(e => e.Lemmas, tokensBuilder =>
             {
-                tokensBuilder.ToTable("AnalysisTokens");
+                tokensBuilder.ToTable("AnalysisLemmas");
                 tokensBuilder.WithOwner().HasForeignKey("LanguageAnalysisId");
                 tokensBuilder.Property<Guid>("Id").ValueGeneratedOnAdd();
                 tokensBuilder.HasKey("Id");

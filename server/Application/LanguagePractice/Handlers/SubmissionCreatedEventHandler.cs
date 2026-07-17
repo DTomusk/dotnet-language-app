@@ -59,10 +59,15 @@ public class SubmissionCreatedEventHandler : IEventHandler<LanguageSubmissionCre
         {
             existingAnalysis.MarkAsFailed();
             await _analysisRepo.UpdateLanguageAnalysisAsync(existingAnalysis, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
             throw new InvalidOperationException("Language analysis service returned a failure response.");
         }
 
         // Update the analysis entity with the results and persist 
+        existingAnalysis.AddLemmas(responseResult.Value.Lemmas.Select(l => new Lemma(l)));
+        await _analysisRepo.UpdateLanguageAnalysisAsync(existingAnalysis, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
         // Raise new event for processing user's vocabulary
     }
 }

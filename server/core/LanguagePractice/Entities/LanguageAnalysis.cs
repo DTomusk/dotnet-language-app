@@ -10,11 +10,11 @@ public class LanguageAnalysis
     public Guid Id { get; init; }
     public Guid SubmissionId { get; init; }
     public Guid UserId { get; init; }
-    public LanguageCode LanguageCode { get; init; }
+    public required LanguageCode LanguageCode { get; init; }
     public LanguageAnalysisStatus Status { get; private set; }
     public DateTime StartedAt { get; init; }
     public DateTime? CompletedAt { get; private set; }
-    public IEnumerable<Token> Tokens { get; private set; } = new List<Token>();
+    public IEnumerable<Lemma> Lemmas { get; private set; } = new List<Lemma>();
 
     public static Result<LanguageAnalysis> Create(Guid submissionId, Guid userId, LanguageCode language)
     {
@@ -43,9 +43,9 @@ public class LanguageAnalysis
         CompletedAt = DateTime.UtcNow;
     }
 
-    public void AddTokens(IEnumerable<Token> tokens)
+    public void AddLemmas(IEnumerable<Lemma> lemmas)
     {
-        Tokens = Tokens.Concat(tokens);
+        Lemmas = Lemmas.Concat(lemmas);
     }
 }
 
