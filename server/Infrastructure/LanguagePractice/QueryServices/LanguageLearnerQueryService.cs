@@ -3,7 +3,7 @@ using Domain.LanguagePractice.ValueObjects;
 using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.LanguagePractice;
+namespace Infrastructure.LanguagePractice.QueryServices;
 
 public class LanguageLearnerQueryService : ILanguageLearnerQueryService
 {
@@ -17,8 +17,18 @@ public class LanguageLearnerQueryService : ILanguageLearnerQueryService
     public async Task<LanguageCode?> GetUserLanguageAsync(Guid userId, CancellationToken cancellationToken = default)
     {
         return await _context.LanguageLearners
+            .AsNoTracking()
             .Where(ll => ll.UserId == userId)
             .Select(ll => ll.ActiveLanguage)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<LemmaStatistic>> GetUserLemmaStatisticsAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.LanguageLearners
+            .AsNoTracking()
+            .Where(ll => ll.UserId == userId)
+            .SelectMany(ll => ll.LemmaStatistics)
+            .ToListAsync(cancellationToken);
     }
 }

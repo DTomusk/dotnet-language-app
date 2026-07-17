@@ -1,5 +1,6 @@
 ﻿using Application.Shared.Interfaces;
 using Domain.Auth.Events;
+using Domain.LanguagePractice.Events;
 using Domain.Shared.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,6 +27,8 @@ public class EventDispatcher
     {
         // Register all event types here
         _eventTypes["UserCreatedEvent"] = typeof(UserCreatedEvent);
+        _eventTypes["LanguageSubmissionCreatedEvent"] = typeof(LanguageSubmissionCreatedEvent);
+        _eventTypes["LanguageSubmissionAnalysedEvent"] = typeof(LanguageSubmissionAnalysedEvent);
     }
 
     /// <summary>
@@ -88,6 +91,8 @@ public class EventDispatcher
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error handling event {EventType} with handler {HandlerType}.", eventType, handler.GetType().Name);
+                // Throwing causes the outbox processor to mark the event as a failure
+                // Any event handler combination that succeeded will be skipped in retries
                 throw;
             }
         }

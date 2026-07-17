@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260717115907_AllowMultipleAnalysesPerUser")]
+    partial class AllowMultipleAnalysesPerUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,7 +198,7 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("Domain.LanguagePractice.ValueObjects.Lemma", "Lemmas", b1 =>
+                    b.OwnsMany("Domain.LanguagePractice.ValueObjects.Token", "Tokens", b1 =>
                         {
                             b1.Property<Guid>("Id")
                                 .ValueGeneratedOnAdd()
@@ -203,6 +206,13 @@ namespace Infrastructure.Data.Migrations
 
                             b1.Property<Guid>("LanguageAnalysisId")
                                 .HasColumnType("uuid");
+
+                            b1.Property<string>("PartOfSpeech")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<int>("Position")
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Text")
                                 .IsRequired()
@@ -212,13 +222,13 @@ namespace Infrastructure.Data.Migrations
 
                             b1.HasIndex("LanguageAnalysisId");
 
-                            b1.ToTable("AnalysisLemmas", (string)null);
+                            b1.ToTable("AnalysisTokens", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("LanguageAnalysisId");
                         });
 
-                    b.Navigation("Lemmas");
+                    b.Navigation("Tokens");
                 });
 
             modelBuilder.Entity("Domain.LanguagePractice.Entities.LanguageLearner", b =>
@@ -228,46 +238,6 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("Domain.LanguagePractice.Entities.LanguageLearner", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.OwnsMany("Domain.LanguagePractice.ValueObjects.LemmaStatistic", "LemmaStatistics", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("uuid");
-
-                            b1.Property<DateTime>("FirstUsedAt")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<int>("Frequency")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("LanguageCode")
-                                .IsRequired()
-                                .HasMaxLength(10)
-                                .HasColumnType("character varying(10)");
-
-                            b1.Property<Guid>("LanguageLearnerId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<DateTime>("LastUsedAt")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<string>("Text")
-                                .IsRequired()
-                                .HasMaxLength(255)
-                                .HasColumnType("character varying(255)");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("LanguageLearnerId");
-
-                            b1.ToTable("LearnerLemmaStatistics", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("LanguageLearnerId");
-                        });
-
-                    b.Navigation("LemmaStatistics");
                 });
 
             modelBuilder.Entity("Domain.LanguagePractice.Entities.Submission", b =>
