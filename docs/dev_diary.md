@@ -1,3 +1,9 @@
+# 2026-07-17
+## Lemma stats
+I was in a state of complete focus this evening. I implemented a couple of new events and a new endpoint and got them working. I think it's about time I merged the language analysis branch, not because it's done by any means, but I think I want my branches to be more focused and I've still delivered a meaningful piece of work. Later, I would like to work on deployments and unit and integration tests. I would also like to add rate limiting and refresh tokens, as well as build out a super basic react ui. For now, I'm very happy with the work that I've done. 
+
+The other thing was I wanted to come back to the validation pipeline. I think this should be built with the strategy pattern. Each language should have its own strategy e.g. in italian you don't expect to have chinese characters, but in chinese you do. Also, some languages use spaces and others don't. I want to define simple heuristics for guessing whether a piece of text is definitely not a given language. 
+
 # 2026-07-16
 ## Spacy
 I'm very excited to be running NLP pipelines now. There's so much information it can extract from text, so there are lots of directions in which the langauge analysis can go. For now, I want to focus on vocabulary, which will be based on lemmas (ran, runs, running aren't separate vocab). Later I can add more stuff, but I think this is the MVP. 
