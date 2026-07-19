@@ -23,13 +23,23 @@ services:
     depends_on: 
       db:
         condition: service_healthy
+      python:
+        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__DATABASE_URL: Host=db;Port=5432;Database=server_db;Username=user;Password=password
+      ExternalApis__LanguageAnalysis__BaseUrl: http://python:8000/
     ports:
       - "8080:8080"
 
+  python:
+    build:
+      context: ./python
+      dockerfile: ./Dockerfile
+    container_name: language-app-python
+    ports:
+      - "8000:8000"
 
 volumes:
   server_db_data:
