@@ -15,5 +15,21 @@ services:
       interval: 10s
       retries: 5
 
+  api:
+    build:
+      context: ./server
+      dockerfile: ./api/Dockerfile
+    container_name: language-app-api
+    depends_on: 
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DATABASE_URL: Host=db;Port=5432;Database=server_db;Username=user;Password=password
+    ports:
+      - "8080:8080"
+
+
 volumes:
   server_db_data:
