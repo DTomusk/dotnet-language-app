@@ -1,3 +1,9 @@
+# 2026-07-19
+## Deployment
+Now that I have some functionality, no matter how rudimentary, the next thing I need to think about is deployment, deployment, deployment. I've learned the hard way how annoying it is to work on deploying a project that's already reached a certain level of maturity. If I'm not buildig with the aim of deploying, then what's the point? So, I want to get my .net and python servers deployed to a test environment ASAP. 
+
+The first step towards that goal is containerisation. I want to be able to run both services in Docker locally, then I'd like to learn some basic kubernetes to manage my deployments (probably k3's, I don't want to pay much and my requirements are pretty simple). I already run my database through docker, so I don't need to set up a new compose file. 
+
 # 2026-07-17
 ## Lemma stats
 I was in a state of complete focus this evening. I implemented a couple of new events and a new endpoint and got them working. I think it's about time I merged the language analysis branch, not because it's done by any means, but I think I want my branches to be more focused and I've still delivered a meaningful piece of work. Later, I would like to work on deployments and unit and integration tests. I would also like to add rate limiting and refresh tokens, as well as build out a super basic react ui. For now, I'm very happy with the work that I've done. 
