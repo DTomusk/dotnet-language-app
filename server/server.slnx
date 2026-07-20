@@ -4,6 +4,6 @@
   </Folder>
   <Project Path="api/Api.csproj" />
   <Project Path="Application/Application.csproj" Id="2d89da4c-9611-4886-8d28-99248f76d49a" />
-  <Project Path="core/Domain.csproj" />
+  <Project Path="Domain/Domain.csproj" />
   <Project Path="Infrastructure/Infrastructure.csproj" />
 </Solution>
