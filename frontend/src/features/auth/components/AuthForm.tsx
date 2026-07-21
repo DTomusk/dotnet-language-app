@@ -56,7 +56,7 @@ export default function AuthForm({ mode, onSubmit }: AuthFormProps) {
 
     try {
       if (onSubmit) {
-        await onSubmit({ username: values.username, password: values.password });
+        await onSubmit({ displayName: values.username, password: values.password });
       } else {
         await new Promise((resolve) => setTimeout(resolve, 500));
       }

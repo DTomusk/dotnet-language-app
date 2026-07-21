@@ -1,5 +1,5 @@
 export type RegistrationRequest = {
-    username: string;
+    displayName: string;
     password: string;
 }
 
@@ -8,7 +8,7 @@ export type RegistrationResponse = {
 }
 
 export type LoginRequest = {
-    username: string;
+    displayName: string;
     password: string;
 }
 
