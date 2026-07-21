@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Shared.Events;
 
@@ -14,16 +15,18 @@ public class OutboxProcessorService : BackgroundService
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<OutboxProcessorService> _logger;
     // TODO: move into configuration
-    private readonly TimeSpan _delay = TimeSpan.FromSeconds(10);
-    private const int BATCH_SIZE = 100;
-    private const int RETRY_LIMIT = 3;
+    private readonly TimeSpan _delay;
+    private readonly OutboxProcessorOptions _options;
 
     public OutboxProcessorService(
         IServiceProvider serviceProvider,
-        ILogger<OutboxProcessorService> logger)
+        ILogger<OutboxProcessorService> logger,
+        IOptions<OutboxProcessorOptions> options)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
+        _options = options.Value;
+        _delay = TimeSpan.FromSeconds(_options.DelayInSeconds);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -54,9 +57,9 @@ public class OutboxProcessorService : BackgroundService
         var dispatcher = scope.ServiceProvider.GetRequiredService<EventDispatcher>();
 
         var messages = await context.OutboxMessages
-            .Where(m => m.ProcessedAt == null && m.RetryCount < RETRY_LIMIT)
+            .Where(m => m.ProcessedAt == null && m.RetryCount < _options.RetryLimit)
             .OrderBy(m => m.OccurredAt)
-            .Take(BATCH_SIZE)
+            .Take(_options.BatchSize)
             .ToListAsync(cancellationToken);
 
         if (!messages.Any())
