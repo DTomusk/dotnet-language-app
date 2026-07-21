@@ -1,4 +1,9 @@
 # 2026-07-21
+## CD 
+Now that I have deployables, I'd like to automatically deploy to them on merge to main. I would also like to run migrations on the hooked up database before deployment. For migrations, I need to figure out how to run them locally for a remote database and then make that into a repeatable pipeline action. I think I just need to run the migration script I already have, but change the connection string I'm using. 
+
+I'm using supabase for postgres because they have a generous free tier. I could set up postgres in fly and that might be easier, but honestly, it doesn't make much of a difference. 
+
 ## More deployment 
 Not feeling the best today, so probably won't do too much. I've been thinking a bit more about where to host this project, and it honestly seems like k8's or even k3's is going to be too expensive for my needs. I've used fly in the past, which has been really cheap for previous projects, so I'm tempted to just go in that direction. Other options including renting a VPS and hosting there, or self-hosting. I have an old PC that I'm not using any more, so that could be a good option, but I'm not sure if I'd want to have it on all the time, and self-hosting is a lot more effort to set up than VPS, and that's more effort than something like fly. 
 

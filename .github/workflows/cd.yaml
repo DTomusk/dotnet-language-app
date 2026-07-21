@@ -1,0 +1,45 @@
+name: CD
+
+on: 
+    # Trigger the workflow on pushes to the main branch
+    # TODO: make it depend on ci passing
+    push:
+        branches:
+            - main
+    # manual trigger
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: cd
+    cancel-in-progress: false
+
+jobs:
+    migrate:
+        name: Run EF Core migrations
+        runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./server
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: 10.0.x
+
+        - name: Install dotnet-ef
+          run: dotnet tool install --global dotnet-ef --version 10.*
+
+        - name: Add dotnet tools to PATH
+          run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+        - name: Apply migrations to production database
+          env:
+            ConnectionStrings__DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+          run: dotnet ef database update --context AppDbContext --project Infrastructure --startup-project Api --verbosity normal
+

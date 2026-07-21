@@ -7,7 +7,7 @@ app = 'language-python-silver-grove-876'
 primary_region = 'lhr'
 
 [build]
-  dockerfile = "python/Dockerfile"
+  dockerfile = "../python/Dockerfile"
 
 [[vm]]
   memory = '512mb'
