@@ -1,15 +1,11 @@
 name: CD
 
 on: 
-    # Trigger the workflow on pushes to the main branch
-    # TODO: make it depend on ci passing
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
-    # manual trigger
+    # Only trigger cd once ci has completed successfully on main branch
+    workflow_run:
+        workflows: ["CI"]
+        types: [completed]
+        branches: [main]
     workflow_dispatch:
 
 permissions:
