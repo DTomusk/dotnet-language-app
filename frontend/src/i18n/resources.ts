@@ -37,6 +37,7 @@ export const resources = {
       },
       validation: {
         usernameRequired: 'Username is required.',
+        usernameMinLength: 'Username must be at least 8 characters.',
         passwordRequired: 'Password is required.',
         passwordMinLength: 'Password must be at least 8 characters.',
         confirmPasswordRequired: 'Please confirm your password.',

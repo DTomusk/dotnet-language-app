@@ -85,6 +85,10 @@ export default function AuthForm({ mode, onSubmit }: AuthFormProps) {
             control={control}
             rules={{
               required: t("auth:validation.usernameRequired"),
+              minLength: {
+                value: 8,
+                message: t("auth:validation.usernameMinLength"),
+              },
             }}
             render={({ field }) => (
               <TextField
