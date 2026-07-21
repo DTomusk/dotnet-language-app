@@ -21,7 +21,7 @@ export const resources = {
         register: 'Sign up now!',
       },
       fields: {
-        email: 'Email',
+        username: 'Username',
         password: 'Password',
         confirmPassword: 'Confirm password',
       },
@@ -36,8 +36,7 @@ export const resources = {
         newHere: 'Don\'t have an account?👀 ',
       },
       validation: {
-        emailRequired: 'Email is required.',
-        emailInvalid: 'Enter a valid email.',
+        usernameRequired: 'Username is required.',
         passwordRequired: 'Password is required.',
         passwordMinLength: 'Password must be at least 8 characters.',
         confirmPasswordRequired: 'Please confirm your password.',

@@ -3,18 +3,19 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
+import type { LoginSchema } from "../schemas/loginSchema";
 
 type AuthMode = "login" | "register";
 
 type AuthFormValues = {
-  email: string;
+  username: string;
   password: string;
   confirmPassword: string;
 };
 
 type AuthFormProps = {
   mode: AuthMode;
-  onSubmit?: (values: { email: string; password: string }) => Promise<void> | void;
+  onSubmit?: (values: LoginSchema) => Promise<void> | void;
 };
 
 export default function AuthForm({ mode, onSubmit }: AuthFormProps) {
@@ -28,7 +29,7 @@ export default function AuthForm({ mode, onSubmit }: AuthFormProps) {
     setError,
   } = useForm<AuthFormValues>({
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
       confirmPassword: "",
     },
@@ -55,7 +56,7 @@ export default function AuthForm({ mode, onSubmit }: AuthFormProps) {
 
     try {
       if (onSubmit) {
-        await onSubmit({ email: values.email, password: values.password });
+        await onSubmit({ username: values.username, password: values.password });
       } else {
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
@@ -80,23 +81,19 @@ export default function AuthForm({ mode, onSubmit }: AuthFormProps) {
 
         <Stack component="form" spacing={2} onSubmit={handleSubmit(onFormSubmit)} noValidate>
           <Controller
-            name="email"
+            name="username"
             control={control}
             rules={{
-              required: t("auth:validation.emailRequired"),
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: t("auth:validation.emailInvalid"),
-              },
+              required: t("auth:validation.usernameRequired"),
             }}
             render={({ field }) => (
               <TextField
                 {...field}
-                label={t("auth:fields.email")}
-                type="email"
-                autoComplete="email"
-                error={!!errors.email}
-                helperText={errors.email?.message}
+                label={t("auth:fields.username")}
+                type="text"
+                autoComplete="username"
+                error={!!errors.username}
+                helperText={errors.username?.message}
                 fullWidth
               />
             )}

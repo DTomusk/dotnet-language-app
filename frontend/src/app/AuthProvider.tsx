@@ -4,8 +4,8 @@ import { registerUnauthorizedHandler } from "../lib/auth/session";
 
 type AuthContextValue = {
     isAuthenticated: boolean;
-    signIn: (token: string) => void;
-    signOut: () => void;
+    logIn: (token: string) => void;
+    logOut: () => void;
 };
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -13,26 +13,26 @@ export const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const signIn = (token: string) => {
+    const logIn = (token: string) => {
         setToken(token);
         setIsAuthenticated(true);
     };
 
-    const signOut = () => {
+    const logOut = () => {
         clearToken();
         setIsAuthenticated(false);
     };
 
     useEffect(() => {
-        registerUnauthorizedHandler(signOut);
+        registerUnauthorizedHandler(logOut);
 
         return () => {
             registerUnauthorizedHandler(null);
         };
-    }, [signOut]);
+    }, [logOut]);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, signIn, signOut }}>
+        <AuthContext.Provider value={{ isAuthenticated, logIn, logOut }}>
             {children}
         </AuthContext.Provider>
     );
