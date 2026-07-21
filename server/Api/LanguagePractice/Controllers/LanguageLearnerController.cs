@@ -1,4 +1,5 @@
-﻿using Api.Shared.Controllers;
+﻿using Api.Shared.RateLimiting;
+using Api.Shared.Controllers;
 using Api.Shared.Extensions;
 using Application.Auth.Interfaces;
 using Application.LanguagePractice.Commands;
@@ -7,12 +8,14 @@ using Application.Shared.Interfaces;
 using Domain.LanguagePractice.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Api.LanguagePractice.Controllers;
 
 [ApiController]
 [Authorize]
 [Route("Me/Language")]
+[EnableRateLimiting(RateLimitingConfiguration.AuthenticatedPolicy)]
 public class LanguageLearnerController : AuthenticatedControllerBase
 {
     private readonly ICommandHandler<SetPracticeLanguageCommand> _setPracticeLanguageCommandHandler;

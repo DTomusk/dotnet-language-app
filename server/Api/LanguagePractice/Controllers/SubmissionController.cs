@@ -1,3 +1,4 @@
+using Api.Shared.RateLimiting;
 using Api.Shared.Controllers;
 using Api.Shared.Extensions;
 using Api.Submissions.DTOs;
@@ -8,12 +9,14 @@ using Application.Submissions.DTOs;
 using Application.Submissions.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Api.Submissions.Controllers;
 
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+[EnableRateLimiting(RateLimitingConfiguration.AuthenticatedPolicy)]
 public class SubmissionController : AuthenticatedControllerBase
 {
     private readonly ICommandHandler<CreateSubmissionCommand, Guid> _createSubmissionCommandHandler;
