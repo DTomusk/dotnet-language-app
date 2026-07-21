@@ -47,5 +47,5 @@ jobs:
         - name: Apply migrations to production database
           env:
             ConnectionStrings__DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
-          run: dotnet ef database update --context AppDbContext --project Infrastructure --startup-project Api --verbosity normal
+          run: dotnet ef database update --context AppDbContext --project Infrastructure --startup-project Api
 
