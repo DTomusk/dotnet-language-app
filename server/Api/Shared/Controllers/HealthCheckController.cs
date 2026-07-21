@@ -1,10 +1,13 @@
-﻿using Application.Shared.Interfaces;
+﻿using Api.RateLimiting;
+using Application.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Api.Shared.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[EnableRateLimiting(RateLimitingConfiguration.AuthPolicy)]
 public class HealthCheckController : ControllerBase
 {
     private readonly IEnumerable<IHealthCheck> _healthChecks;

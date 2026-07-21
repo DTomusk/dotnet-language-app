@@ -1,4 +1,5 @@
 ﻿using Api.Auth.Validators;
+using Api.RateLimiting;
 using Api.Submissions.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -43,6 +44,9 @@ public static class Register
         });
 
         services.AddAuthentication();
+
+        // Rate limiting
+        services.AddRateLimiter(options => options.ConfigureRateLimiting(configuration));
 
         return services;
     }

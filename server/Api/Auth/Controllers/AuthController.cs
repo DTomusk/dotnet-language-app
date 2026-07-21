@@ -1,15 +1,18 @@
 ﻿using Api.Auth.DTOs;
+using Api.RateLimiting;
 using Api.Shared.Extensions;
 using Application.Auth.Commands;
 using Application.Auth.DTOs;
 using Application.Shared.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Api.Auth.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[EnableRateLimiting(RateLimitingConfiguration.AuthPolicy)]
 public class AuthController : ControllerBase
 {
     private readonly ICommandHandler<LoginUserCommand, AuthResponse> _loginHandler;
