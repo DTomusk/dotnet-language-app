@@ -1,4 +1,7 @@
 # 2026-07-21
+## Frontend
+I've decided now's the time to start working on the frontend. I'm going to go for a classic react vite SPA, maybe with Material UI because I don't want to design my own components. I've done a bunch of these before, so I'm just going to steal the structure of one of my existing projects to get started. 
+
 ## CD 
 Now that I have deployables, I'd like to automatically deploy to them on merge to main. I would also like to run migrations on the hooked up database before deployment. For migrations, I need to figure out how to run them locally for a remote database and then make that into a repeatable pipeline action. I think I just need to run the migration script I already have, but change the connection string I'm using. 
 
