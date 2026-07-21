@@ -1,3 +1,15 @@
+# 2026-07-21
+## More deployment 
+Not feeling the best today, so probably won't do too much. I've been thinking a bit more about where to host this project, and it honestly seems like k8's or even k3's is going to be too expensive for my needs. I've used fly in the past, which has been really cheap for previous projects, so I'm tempted to just go in that direction. Other options including renting a VPS and hosting there, or self-hosting. I have an old PC that I'm not using any more, so that could be a good option, but I'm not sure if I'd want to have it on all the time, and self-hosting is a lot more effort to set up than VPS, and that's more effort than something like fly. 
+
+My goal right now should just be to get it hosted somewhere, and if fly is the cheapest and simplest, I should go for that. I can always migrate to a VPS if I want more control or take some time to figure out self-hosting on my PC. 
+
+For now, I'll use fly. I'll have two fly apps, one for .net and one for python. Python will be private so it can be accessed by .net but not publicly. .net will be the entrypoint for everything. Keeping them separate will allow for independent scaling. At some point, I may separate the background processing into a worker deployment, and that should be super easy as well because they are essentially independent already, it's just how they're running is coupled. 
+
+For creating a new fly app: `fly launch --name language-api --no-deploy`, then edit .toml file manually to add in `Dockerfile`
+
+For deploying a specific fly app: `fly deploy -c ../fly/api.toml` run this from the specific project directory (e.g. `./server` in this case) to prevent needlessly sending files to the builder.
+
 # 2026-07-19
 ## Deployment
 Now that I have some functionality, no matter how rudimentary, the next thing I need to think about is deployment, deployment, deployment. I've learned the hard way how annoying it is to work on deploying a project that's already reached a certain level of maturity. If I'm not buildig with the aim of deploying, then what's the point? So, I want to get my .net and python servers deployed to a test environment ASAP. 

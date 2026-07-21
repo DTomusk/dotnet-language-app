@@ -1,0 +1,16 @@
+# fly.toml app configuration file generated for language-python-silver-grove-876 on 2026-07-21T11:10:55+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'language-python-silver-grove-876'
+primary_region = 'lhr'
+
+[build]
+  dockerfile = "python/Dockerfile"
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 512
