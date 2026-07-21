@@ -4,6 +4,7 @@ import RegistrationPage from '../pages/RegistrationPage'
 import HomePage from '../pages/HomePage'
 import AppLayout from '../layout/AppLayout'
 import { createBrowserRouter } from 'react-router-dom'
+import ProtectedLayout from './ProtectedLayout'
 
 export const router = createBrowserRouter([
     {
@@ -11,10 +12,14 @@ export const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
             {
-                index: true,
-                element: <HomePage />
-            },
-            
+                element: <ProtectedLayout />,
+                children: [
+                    {
+                        index: true,
+                        element: <HomePage />
+                    },
+                ]
+            }
         ]
     },
     {

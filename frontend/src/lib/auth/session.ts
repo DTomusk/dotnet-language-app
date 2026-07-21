@@ -1,6 +1,6 @@
 let unauthorizedHandler: (() => void) | null = null;
 
-export function registerUnauthorizedHandler(handler: () => void) {
+export function registerUnauthorizedHandler(handler: (() => void) | null) {
     unauthorizedHandler = handler;
 }
 
