@@ -1,3 +1,32 @@
+# 2026-07-21
+## CD 
+Now that I have deployables, I'd like to automatically deploy to them on merge to main. I would also like to run migrations on the hooked up database before deployment. For migrations, I need to figure out how to run them locally for a remote database and then make that into a repeatable pipeline action. I think I just need to run the migration script I already have, but change the connection string I'm using. 
+
+I'm using supabase for postgres because they have a generous free tier. I could set up postgres in fly and that might be easier, but honestly, it doesn't make much of a difference. 
+
+I've now got my .net server running on fly and I've managed to call the health check endpoints using postman. As expected, the live one works and the ready one doesn't because .net isn't talking to python yet, so that's the next thing I want to fix. 
+
+Ok, I've now got the ready endpoint working in postman, whoopie! It would be good to run the healthcheck endpoints in my CD pipeline once we've deployed to check it's all working, but for now I'm quite happy. The next thing I want to do is to make the background job frequency configurable because it's really annoying how much it fills up the logs and there's no way for me to control it. I can make it less frequent now and then later up the frequency once there's a reason to. 
+
+I've just registered a user via postman and observed that an event was published and handled to create an associated language learner. I've never been so proud. My api works in a deployed environment with the events background service. Now I want to make some small changes like distributed rate limiting and refresh tokens before moving back to feature work (and building the UI).
+
+## More deployment 
+Not feeling the best today, so probably won't do too much. I've been thinking a bit more about where to host this project, and it honestly seems like k8's or even k3's is going to be too expensive for my needs. I've used fly in the past, which has been really cheap for previous projects, so I'm tempted to just go in that direction. Other options including renting a VPS and hosting there, or self-hosting. I have an old PC that I'm not using any more, so that could be a good option, but I'm not sure if I'd want to have it on all the time, and self-hosting is a lot more effort to set up than VPS, and that's more effort than something like fly. 
+
+My goal right now should just be to get it hosted somewhere, and if fly is the cheapest and simplest, I should go for that. I can always migrate to a VPS if I want more control or take some time to figure out self-hosting on my PC. 
+
+For now, I'll use fly. I'll have two fly apps, one for .net and one for python. Python will be private so it can be accessed by .net but not publicly. .net will be the entrypoint for everything. Keeping them separate will allow for independent scaling. At some point, I may separate the background processing into a worker deployment, and that should be super easy as well because they are essentially independent already, it's just how they're running is coupled. 
+
+For creating a new fly app: `fly launch --name language-api --no-deploy`, then edit .toml file manually to add in `Dockerfile`
+
+For deploying a specific fly app: `fly deploy -c ../fly/api.toml` run this from the specific project directory (e.g. `./server` in this case) to prevent needlessly sending files to the builder.
+
+# 2026-07-19
+## Deployment
+Now that I have some functionality, no matter how rudimentary, the next thing I need to think about is deployment, deployment, deployment. I've learned the hard way how annoying it is to work on deploying a project that's already reached a certain level of maturity. If I'm not buildig with the aim of deploying, then what's the point? So, I want to get my .net and python servers deployed to a test environment ASAP. 
+
+The first step towards that goal is containerisation. I want to be able to run both services in Docker locally, then I'd like to learn some basic kubernetes to manage my deployments (probably k3's, I don't want to pay much and my requirements are pretty simple). I already run my database through docker, so I don't need to set up a new compose file. 
+
 # 2026-07-17
 ## Lemma stats
 I was in a state of complete focus this evening. I implemented a couple of new events and a new endpoint and got them working. I think it's about time I merged the language analysis branch, not because it's done by any means, but I think I want my branches to be more focused and I've still delivered a meaningful piece of work. Later, I would like to work on deployments and unit and integration tests. I would also like to add rate limiting and refresh tokens, as well as build out a super basic react ui. For now, I'm very happy with the work that I've done. 
