@@ -8,6 +8,8 @@ I've now got my .net server running on fly and I've managed to call the health c
 
 Ok, I've now got the ready endpoint working in postman, whoopie! It would be good to run the healthcheck endpoints in my CD pipeline once we've deployed to check it's all working, but for now I'm quite happy. The next thing I want to do is to make the background job frequency configurable because it's really annoying how much it fills up the logs and there's no way for me to control it. I can make it less frequent now and then later up the frequency once there's a reason to. 
 
+I've just registered a user via postman and observed that an event was published and handled to create an associated language learner. I've never been so proud. My api works in a deployed environment with the events background service. Now I want to make some small changes like distributed rate limiting and refresh tokens before moving back to feature work (and building the UI).
+
 ## More deployment 
 Not feeling the best today, so probably won't do too much. I've been thinking a bit more about where to host this project, and it honestly seems like k8's or even k3's is going to be too expensive for my needs. I've used fly in the past, which has been really cheap for previous projects, so I'm tempted to just go in that direction. Other options including renting a VPS and hosting there, or self-hosting. I have an old PC that I'm not using any more, so that could be a good option, but I'm not sure if I'd want to have it on all the time, and self-hosting is a lot more effort to set up than VPS, and that's more effort than something like fly. 
 
