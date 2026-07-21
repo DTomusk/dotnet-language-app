@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import type { SubmissionSchema } from "../schemas/submissionSchema";
 import { Controller, useForm } from "react-hook-form";
@@ -39,41 +39,48 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
     }
 
     return (
-        <Box>
-            <Stack>
-                <Typography variant="h4">{t("languagePractice:submission.Title")}</Typography>
+        <Paper elevation={3} 
+            sx={{
+                p: 4, 
+                margin: "0 auto",
+                borderRadius: 3,
+            }}>
+            <Box>
+                <Stack spacing={2}>
+                    <Typography variant="h4">{t("languagePractice:submission.Title")}</Typography>
 
-                {submitError ? <Alert severity="error">{submitError}</Alert> : null}
+                    {submitError ? <Alert severity="error">{submitError}</Alert> : null}
 
-                <Stack component="form" onSubmit={handleSubmit(onFormSubmit)} spacing={2}>
-                    <Controller
-                        name="text"
-                        control={control}
-                        rules={{
-                            required: t("languagePractice:submission.validation.textRequired"),
-                            maxLength: {
-                                value: 500,
-                                message: t("languagePractice:submission.validation.textMaxLength"),
-                            },
-                        }}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label={t("languagePractice:submission.fields.text")}
-                                multiline
-                                rows={4}
-                                error={!!errors.text}
-                                helperText={errors.text?.message}
-                                fullWidth
-                            />
-                        )}
-                    />
+                    <Stack component="form" onSubmit={handleSubmit(onFormSubmit)} spacing={2}>
+                        <Controller
+                            name="text"
+                            control={control}
+                            rules={{
+                                required: t("languagePractice:submission.validation.textRequired"),
+                                maxLength: {
+                                    value: 500,
+                                    message: t("languagePractice:submission.validation.textMaxLength"),
+                                },
+                            }}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label={t("languagePractice:submission.fields.text")}
+                                    multiline
+                                    rows={4}
+                                    error={!!errors.text}
+                                    helperText={errors.text?.message}
+                                    fullWidth
+                                />
+                            )}
+                        />
 
-                    <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
-                        {t("languagePractice:submission.submitButton")}
-                    </Button>
+                        <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+                            {t("common:actions.submit")}
+                        </Button>
+                    </Stack>
                 </Stack>
-            </Stack>
-        </Box>
-    )
+            </Box>
+        </Paper>
+    );
 }

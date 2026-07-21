@@ -6,6 +6,7 @@ export const resources = {
     common: {
       actions: {
         submitting: 'Submitting...',
+        submit: 'Submit',
       },
       errors: {
         genericSubmit: 'Something went wrong. Please try again.',
@@ -42,6 +43,18 @@ export const resources = {
         passwordMinLength: 'Password must be at least 8 characters.',
         confirmPasswordRequired: 'Please confirm your password.',
         passwordsDoNotMatch: 'Passwords do not match.',
+      },
+    },
+    languagePractice: {
+      submission: {
+        Title: 'Submit your text',
+        fields: {
+          text: 'Text',
+        },
+        validation: {
+          textRequired: 'Submission text is required.',
+          textMaxLength: 'Submission text must be at most 500 characters.',
+        },
       },
     },
   },
