@@ -1,4 +1,4 @@
-﻿using Api.RateLimiting;
+﻿using Api.Shared.RateLimiting;
 using Application.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

@@ -1,4 +1,4 @@
-using Api.RateLimiting;
+using Api.Shared.RateLimiting;
 using Api.Shared.Controllers;
 using Api.Shared.Extensions;
 using Api.Submissions.DTOs;

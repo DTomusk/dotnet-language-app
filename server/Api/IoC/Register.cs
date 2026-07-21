@@ -1,5 +1,5 @@
 ﻿using Api.Auth.Validators;
-using Api.RateLimiting;
+using Api.Shared.RateLimiting;
 using Api.Submissions.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;

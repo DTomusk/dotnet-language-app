@@ -1,10 +1,9 @@
 ﻿using Api.Auth.DTOs;
-using Api.RateLimiting;
+using Api.Shared.RateLimiting;
 using Api.Shared.Extensions;
 using Application.Auth.Commands;
 using Application.Auth.DTOs;
 using Application.Shared.Interfaces;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
