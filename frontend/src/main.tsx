@@ -4,6 +4,7 @@ import App from './App.tsx'
 import { initApiClient } from './lib/api/client.ts';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { appTheme } from './theme.ts';
+import './i18n';
 
 initApiClient(import.meta.env.VITE_API_BASE_URL);
 
