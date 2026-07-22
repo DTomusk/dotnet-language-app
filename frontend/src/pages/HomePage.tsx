@@ -1,4 +1,5 @@
 import LanguageSelector from "../features/languagePractice/components/LanguageSelector";
+import Spinner from "../components/Spinner";
 import SubmissionForm from "../features/languagePractice/components/SubmissionForm";
 import { useGetActiveLanguage, useSetActiveLanguage } from "../features/languagePractice/hooks/useActiveLanguage";
 import { useAvailableLanguages } from "../features/languagePractice/hooks/useAvailableLanguages";
@@ -6,7 +7,11 @@ import { useSubmission } from "../features/languagePractice/hooks/useSubmission"
 import type { SubmissionSchema } from "../features/languagePractice/schemas/submissionSchema";
 import { useState } from "react";
 
+import { useTranslation } from "react-i18next";
+import Alert from "@mui/material/Alert";
+
 export default function HomePage() {
+    const { t } = useTranslation(["common"]);
     const { data, isLoading, error, refetch } = useGetActiveLanguage();
     const { data: languages, isLoading: isLoadingLanguages } = useAvailableLanguages();
     const setLanguageMutation = useSetActiveLanguage();
@@ -28,11 +33,11 @@ export default function HomePage() {
     }
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Spinner aria-label={t("common:loading")} />;
     }
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <Alert severity="error">{t("common:error")}: {error.message}</Alert>;
     }
 
     if (!data) {

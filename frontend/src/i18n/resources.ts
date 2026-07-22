@@ -12,6 +12,8 @@ export const resources = {
       errors: {
         genericSubmit: 'Something went wrong. Please try again.',
       },
+      loading: 'Loading...',
+      error: 'Error',
     },
     auth: {
       title: {
@@ -61,6 +63,8 @@ export const resources = {
         title: 'Choose your practice language',
         subtitle: 'Choose which language you want to start practising. You can always change this later.',
         selectLanguagePlaceholder: 'Choose a language',
+        loadingLanguages: 'Loading languages...',
+        noLanguagesAvailable: 'No languages available.',
       },
     },
   },

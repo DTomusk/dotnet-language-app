@@ -1,6 +1,7 @@
-import { Button, Paper, Stack, Typography } from "@mui/material";
+import { Alert, Button, Paper, Stack, Typography } from "@mui/material";
+import Spinner from "../../../components/Spinner";
 import { useTranslation } from "react-i18next";
-import DropdownSelect from "./DropdownSelect.tsx";
+import DropdownSelect from "../../../components/DropdownSelect.tsx";
 import type { Language } from "../types/types";
 
 type LanguageSelectorProps = {
@@ -23,11 +24,11 @@ export default function LanguageSelector({
     const { t } = useTranslation(["languagePractice", "common"]);
 
     if (isLoading) {
-        return <div>Loading languages...</div>;
+        return <Spinner aria-label={t("languagePractice:languageSelection.loadingLanguages")} />;
     }
 
     if (!languages || languages.length === 0) {
-        return <div>No languages available.</div>;
+        return <Alert severity="error">{t("languagePractice:languageSelection.noLanguagesAvailable")}</Alert>;
     }
 
     return (
