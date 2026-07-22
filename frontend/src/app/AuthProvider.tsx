@@ -1,5 +1,5 @@
-import { createContext, useEffect, useState, type ReactNode } from "react";
-import { clearToken, setToken } from "../lib/auth/token";
+import { createContext, useCallback, useEffect, useState, type ReactNode } from "react";
+import { clearToken, getToken, setToken } from "../lib/auth/token";
 import { registerUnauthorizedHandler } from "../lib/auth/session";
 
 type AuthContextValue = {
@@ -11,17 +11,17 @@ type AuthContextValue = {
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getToken()));
 
-    const logIn = (token: string) => {
+    const logIn = useCallback((token: string) => {
         setToken(token);
         setIsAuthenticated(true);
-    };
+    }, []);
 
-    const logOut = () => {
+    const logOut = useCallback(() => {
         clearToken();
         setIsAuthenticated(false);
-    };
+    }, []);
 
     useEffect(() => {
         registerUnauthorizedHandler(logOut);
