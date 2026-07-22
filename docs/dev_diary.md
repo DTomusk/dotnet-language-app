@@ -1,3 +1,7 @@
+# 2026-07-22
+## Submission frontend 
+I've made good progress on the frontend so far. I have an auth form that can be used for login and registration, and I have a form that can be used for language submissions. The next thing that I need to do is a screen where you choose the language you want to practice in (initially), and that will hook up to the current endpoint that sets the active language on a language learner. 
+
 # 2026-07-21
 ## Frontend
 I've decided now's the time to start working on the frontend. I'm going to go for a classic react vite SPA, maybe with Material UI because I don't want to design my own components. I've done a bunch of these before, so I'm just going to steal the structure of one of my existing projects to get started. 
