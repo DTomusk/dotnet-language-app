@@ -3,6 +3,6 @@ export type SubmissionRequest = {
 };
 
 export type Language = {
-    id: string;
-    name: string;
+    languageCode: string;
+    languageName: string;
 };

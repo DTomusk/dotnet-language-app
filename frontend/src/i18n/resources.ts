@@ -7,6 +7,7 @@ export const resources = {
       actions: {
         submitting: 'Submitting...',
         submit: 'Submit',
+        confirm: 'Confirm',
       },
       errors: {
         genericSubmit: 'Something went wrong. Please try again.',
@@ -55,6 +56,10 @@ export const resources = {
           textRequired: 'Submission text is required.',
           textMaxLength: 'Submission text must be at most 500 characters.',
         },
+      },
+      languageSelection: {
+        title: 'Choose your practice language',
+        subtitle: 'Choose the language you want to practice.',
       },
     },
   },

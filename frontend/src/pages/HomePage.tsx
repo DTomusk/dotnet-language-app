@@ -1,3 +1,4 @@
+import LanguageSelector from "../features/languagePractice/components/LanguageSelector";
 import SubmissionForm from "../features/languagePractice/components/SubmissionForm";
 import { useActiveLanguage } from "../features/languagePractice/hooks/useActiveLanguage";
 import { useSubmission } from "../features/languagePractice/hooks/useSubmission";
@@ -21,7 +22,7 @@ export default function HomePage() {
     }
 
     if (!data) {
-        return <div>No active language found.</div>;
+        return <LanguageSelector />;
     }
 
     return (
