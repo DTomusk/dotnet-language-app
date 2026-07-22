@@ -7,7 +7,7 @@ export const appTheme = createTheme({
       main: '#d35a0e',
     },
     secondary: {
-      main: '#0f766e',
+      main: '#8b2710',
     },
     background: {
       default: '#f8fafc',
@@ -19,6 +19,18 @@ export const appTheme = createTheme({
   },
   typography: {
     fontFamily: '"Plus Jakarta Sans", "Segoe UI", sans-serif',
+    h1: {
+      fontWeight: 700,
+      letterSpacing: '-0.02em',
+    },
+    h2: {
+      fontWeight: 700,
+      letterSpacing: '-0.02em',
+    },
+    h3: {
+      fontWeight: 700,
+      letterSpacing: '-0.02em',
+    },
     h4: {
       fontWeight: 700,
       letterSpacing: '-0.01em',

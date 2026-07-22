@@ -7,7 +7,7 @@ export default function NavBar() {
     const navigate = useNavigate();
 
     return (
-        <AppBar position="sticky" sx={{ top: 0 }}>
+        <AppBar position="sticky" sx={{ top: 0 }} color="secondary">
             <Toolbar>
                 {isAuthenticated ? (
                     <Button color="inherit" onClick={logOut}>Logout</Button>
