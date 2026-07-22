@@ -1,12 +1,25 @@
 import { Button, Paper, Stack, Typography } from "@mui/material";
-import { useAvailableLanguages } from "../hooks/useAvailableLanguages";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import DropdownSelect from "./DropdownSelect.tsx";
+import type { Language } from "../types/types";
 
-export default function LanguageSelector() {
-    const { data: languages, isLoading } = useAvailableLanguages();
-    const [selectedLanguage, setSelectedLanguage] = useState("");
+type LanguageSelectorProps = {
+    languages?: Language[];
+    isLoading: boolean;
+    isSubmitting: boolean;
+    selectedLanguage: string;
+    onLanguageChange: (value: string) => void;
+    onConfirm: () => Promise<void> | void;
+};
+
+export default function LanguageSelector({
+    languages,
+    isLoading,
+    isSubmitting,
+    selectedLanguage,
+    onLanguageChange,
+    onConfirm,
+}: LanguageSelectorProps) {
     const { t } = useTranslation(["languagePractice", "common"]);
 
     if (isLoading) {
@@ -26,7 +39,7 @@ export default function LanguageSelector() {
                 </Typography>
                 <DropdownSelect
                     value={selectedLanguage}
-                    onChange={setSelectedLanguage}
+                    onChange={onLanguageChange}
                     placeholder={t("languagePractice:languageSelection.selectLanguagePlaceholder")}
                     items={languages.map((language) => ({
                         value: language.languageCode,
@@ -36,8 +49,9 @@ export default function LanguageSelector() {
                 <Button
                     variant="contained"
                     color="primary"
-                    disabled={!selectedLanguage}
+                    disabled={!selectedLanguage || isSubmitting}
                     sx={{ alignSelf: "flex-start" }}
+                    onClick={onConfirm}
                 >
                     {t("common:actions.confirm")}
                 </Button>

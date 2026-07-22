@@ -9,6 +9,7 @@ using Domain.LanguagePractice.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Api.LanguagePractice.DTOs;
 
 namespace Api.LanguagePractice.Controllers;
 
@@ -44,9 +45,9 @@ public class LanguageLearnerController : AuthenticatedControllerBase
 
 
     [HttpPut(Name = "SetPracticeLanguage")]
-    public async Task<IActionResult> SetPracticeLanguage(string languageCode)
+    public async Task<IActionResult> SetPracticeLanguage([FromBody] SetLanguageRequest request)
     {
-        var command = new SetPracticeLanguageCommand(CurrentUserId, languageCode);
+        var command = new SetPracticeLanguageCommand(CurrentUserId, request.LanguageCode);
 
         var result = await _setPracticeLanguageCommandHandler.HandleAsync(command);
 
