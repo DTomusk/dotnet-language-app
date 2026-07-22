@@ -59,7 +59,8 @@ export const resources = {
       },
       languageSelection: {
         title: 'Choose your practice language',
-        subtitle: 'Choose the language you want to practice.',
+        subtitle: 'Choose which language you want to start practising. You can always change this later.',
+        selectLanguagePlaceholder: 'Choose a language',
       },
     },
   },
