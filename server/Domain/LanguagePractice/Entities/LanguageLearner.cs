@@ -11,6 +11,7 @@ public class LanguageLearner
     public LanguageCode? ActiveLanguage { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public ICollection<LemmaStatistic> LemmaStatistics { get; private set; } = new List<LemmaStatistic>();
+    public ICollection<LanguageLearnerStats> LanguageStats { get; private set; } = new List<LanguageLearnerStats>();
 
     public static Result<LanguageLearner> Create(Guid userId)
     {
@@ -40,20 +41,18 @@ public class LanguageLearner
         return Result.Success();
     }
 
-    public Result UpdateLemmaStatistics(IEnumerable<Lemma> newLemmas)
+    public Result UpdateLemmaStatistics(IEnumerable<Lemma> newLemmas, LanguageCode languageCode)
     {
-        // TODO: should we explicitly pass in what language these are in? 
-        if (ActiveLanguage == null)
-            return Result.Failure(new Error("ActiveLanguage must be set before updating lemma statistics.", ErrorType.Validation));
-
         if (newLemmas == null || !newLemmas.Any())
             return Result.Success();
 
         var now = DateTime.UtcNow;
 
+        var newLemmaCount = 0;
+
         foreach (var lemma in newLemmas)
         {
-            var existingStat = LemmaStatistics.FirstOrDefault(ls => ls.Text == lemma.Text && ls.LanguageCode == ActiveLanguage.ToString());
+            var existingStat = LemmaStatistics.FirstOrDefault(ls => ls.Text == lemma.Text && ls.LanguageCode == languageCode.ToString());
 
             if (existingStat != null)
             {
@@ -69,15 +68,49 @@ public class LanguageLearner
             }
             else
             {
+                newLemmaCount++;
                 var newStat = new LemmaStatistic(
                     lemma.Text,
-                    ActiveLanguage.ToString(),
+                    languageCode.ToString(),
                     1,
                     now,
                     now);
                 LemmaStatistics.Add(newStat);
             }
         }
+        return RecordSubmission(languageCode, newLemmaCount);
+    }
+
+    private Result RecordSubmission(LanguageCode languageCode, int newLemmasCount = 0)
+    {
+        if (languageCode == null)
+            return Result.Failure(new Error("LanguageCode cannot be null.", ErrorType.Validation));
+
+        var existingStat = LanguageStats.FirstOrDefault(ls => ls.LanguageCode == languageCode);
+
+        if (existingStat != null)
+        {
+            var updated = existingStat with
+            {
+                TotalSubmissions = existingStat.TotalSubmissions + 1,
+                UniqueLemmas = existingStat.UniqueLemmas + newLemmasCount,
+                LastSubmissionAt = DateTime.UtcNow
+            };
+            
+            LanguageStats.Remove(existingStat);
+            LanguageStats.Add(updated);
+        }
+        else
+        {
+            var newStat = new LanguageLearnerStats(
+                languageCode,
+                1,
+                newLemmasCount,
+                DateTime.UtcNow);
+
+            LanguageStats.Add(newStat);
+        }
+
         return Result.Success();
     }
 }

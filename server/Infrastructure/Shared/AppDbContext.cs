@@ -113,6 +113,32 @@ public class AppDbContext : DbContext
                 statsBuilder.Property<Guid>("Id").ValueGeneratedOnAdd();
                 statsBuilder.HasKey("Id");
             });
+
+            entity.OwnsMany(e => e.LanguageStats, statsBuilder =>
+            { 
+                statsBuilder.ToTable("LearnerLanguageStats");
+                statsBuilder.WithOwner().HasForeignKey("LanguageLearnerId");
+
+                statsBuilder.Property(l => l.LanguageCode)
+                    .HasConversion(languageCodeConverter)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                statsBuilder.Property(l => l.TotalSubmissions)
+                    .IsRequired();
+
+                statsBuilder.Property(l => l.UniqueLemmas)
+                    .IsRequired();
+
+                statsBuilder.Property(l => l.StartedLearningAt)
+                    .IsRequired();
+
+                statsBuilder.Property(l => l.LastSubmissionAt)
+                    .IsRequired(false);
+
+                statsBuilder.HasIndex(l => l.LanguageCode)
+                    .IsUnique();
+            });
         });
 
         // Configure OutboxMessage entity

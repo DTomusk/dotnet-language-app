@@ -40,7 +40,7 @@ public class SubmissionAnalysedEventHandler : IEventHandler<LanguageSubmissionAn
             throw new InvalidOperationException($"Language learner with ID {analysis.UserId} not found.");
         }
 
-        languageLearner.UpdateLemmaStatistics(analysis.Lemmas);
+        languageLearner.UpdateLemmaStatistics(analysis.Lemmas, analysis.LanguageCode);
         await _learnerRepo.UpdateAsync(languageLearner, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
     }
