@@ -15,7 +15,7 @@ public class LanguageLearnerQueryService : ILanguageLearnerQueryService
         _context = context;
     }
 
-    public async Task<LanguageStatsResponse> GetLanguageStatsAsync(Guid userId, string languageCode, CancellationToken cancellationToken = default)
+    public async Task<LanguageStatsDTO> GetLanguageStatsAsync(Guid userId, string languageCode, CancellationToken cancellationToken = default)
     {
         var result = await (from ll in _context.LanguageLearners.AsNoTracking()
                             join u in _context.Users on ll.UserId equals u.Id
@@ -30,7 +30,7 @@ public class LanguageLearnerQueryService : ILanguageLearnerQueryService
         if (match == null)
             throw new InvalidOperationException($"Language stats not found for user {userId} and language {languageCode}");
 
-        return new LanguageStatsResponse(
+        return new LanguageStatsDTO(
             match.u.DisplayName,
             match.stats.UniqueLemmas,
             match.stats.StartedLearningAt);

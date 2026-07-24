@@ -21,6 +21,8 @@ public class GetActiveLanguageStatsQueryHandler : IQueryHandler<GetActiveLanguag
             throw new InvalidOperationException("User has no active language.");
 
         var languageStats = await _languageLearnerQueryService.GetLanguageStatsAsync(query.UserId, languageCode.Value, cancellationToken);
-        return languageStats;
+        // Include today
+        var daysPractised = (DateTime.UtcNow - languageStats.StartedAt).Days + 1;
+        return new LanguageStatsResponse(languageStats.DisplayName, languageStats.UniqueLemmas, daysPractised);
     }
 }
