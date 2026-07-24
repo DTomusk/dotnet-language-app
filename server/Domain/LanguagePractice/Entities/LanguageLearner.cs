@@ -106,7 +106,8 @@ public class LanguageLearner
                 languageCode,
                 1,
                 newLemmasCount,
-                DateTime.UtcNow);
+                DateTime.UtcNow,
+                this.UserId);
 
             LanguageStats.Add(newStat);
         }

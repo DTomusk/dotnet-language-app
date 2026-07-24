@@ -136,7 +136,7 @@ public class AppDbContext : DbContext
                 statsBuilder.Property(l => l.LastSubmissionAt)
                     .IsRequired(false);
 
-                statsBuilder.HasIndex(l => l.LanguageCode)
+                statsBuilder.HasIndex(l => new { l.LanguageCode, l.LanguageLearnerId })
                     .IsUnique();
             });
         });

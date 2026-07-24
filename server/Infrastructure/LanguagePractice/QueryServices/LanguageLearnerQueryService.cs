@@ -1,4 +1,5 @@
-﻿using Application.LanguagePractice.Interfaces;
+﻿using Application.LanguagePractice.DTOs;
+using Application.LanguagePractice.Interfaces;
 using Domain.LanguagePractice.ValueObjects;
 using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,27 @@ public class LanguageLearnerQueryService : ILanguageLearnerQueryService
     public LanguageLearnerQueryService(AppDbContext context)
     {
         _context = context;
+    }
+
+    public async Task<LanguageStatsResponse> GetLanguageStatsAsync(Guid userId, string languageCode, CancellationToken cancellationToken = default)
+    {
+        var result = await (from ll in _context.LanguageLearners.AsNoTracking()
+                            join u in _context.Users on ll.UserId equals u.Id
+                            where ll.UserId == userId
+                            select new { ll, u })
+            .ToListAsync(cancellationToken);
+
+        var match = result
+            .SelectMany(x => x.ll.LanguageStats, (x, stats) => new { x.u, stats })
+            .FirstOrDefault(x => x.stats.LanguageCode.Value == languageCode);
+
+        if (match == null)
+            throw new InvalidOperationException($"Language stats not found for user {userId} and language {languageCode}");
+
+        return new LanguageStatsResponse(
+            match.u.DisplayName,
+            match.stats.UniqueLemmas,
+            match.stats.StartedLearningAt);
     }
 
     public async Task<LanguageCode?> GetUserLanguageAsync(Guid userId, CancellationToken cancellationToken = default)
