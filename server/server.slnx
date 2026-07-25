@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/tests/">
+    <Project Path="Application.UnitTests/Application.UnitTests.csproj" Id="ab4e8d1f-cbbe-4232-a562-f03481c3e772" />
     <Project Path="Domain.UnitTests/Domain.UnitTests.csproj" Id="2cb76326-8b31-498f-a441-edc61f095fe3" />
   </Folder>
   <Project Path="Api/Api.csproj" />
