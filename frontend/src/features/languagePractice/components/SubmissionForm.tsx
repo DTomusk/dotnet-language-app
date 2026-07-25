@@ -1,42 +1,38 @@
-import { Alert, Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import type { SubmissionSchema } from "../schemas/submissionSchema";
 import { Controller, useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 
 type SubmissionFormProps = {
     onSubmit: (values: SubmissionSchema) => Promise<void> | void;
+    isSubmitting?: boolean;
+    isSuccess?: boolean;
 };
 
-export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
-    const [submitError, setSubmitError] = useState<string | null>(null);
+export default function SubmissionForm({ onSubmit, isSubmitting, isSuccess }: SubmissionFormProps) {
     const { t } = useTranslation(["languagePractice", "common"]);
 
     const {
         control,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        reset,
+        formState: { errors },
     } = useForm<SubmissionSchema>({
         defaultValues: {
             text: "",
         },
     });
 
-    async function onFormSubmit(values: SubmissionSchema) {
-        setSubmitError(null);
+    const prevIsSuccessRef = useRef(false);
 
-        try {
-            if (onSubmit) {
-                await onSubmit({ text: values.text });
-            } else {
-                await new Promise((resolve) => setTimeout(resolve, 500));
-            }
-        } catch (error: any) {
-            const message =
-                error instanceof Error ? error.message : t("common:errors.genericSubmit");
-            setSubmitError(message);
-        }
+    useEffect(() => {
+    const justSucceeded = !prevIsSuccessRef.current && !!isSuccess;
+    if (justSucceeded) {
+        reset({ text: "" });
     }
+    prevIsSuccessRef.current = !!isSuccess;
+    }, [isSuccess, reset]);
 
     return (
         <Paper elevation={3} 
@@ -48,10 +44,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
             <Box>
                 <Stack spacing={2}>
                     <Typography variant="h4">{t("languagePractice:submission.Title")}</Typography>
-
-                    {submitError ? <Alert severity="error">{submitError}</Alert> : null}
-
-                    <Stack component="form" onSubmit={handleSubmit(onFormSubmit)} spacing={2}>
+                    <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={2}>
                         <Controller
                             name="text"
                             control={control}
@@ -75,7 +68,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
                             )}
                         />
 
-                        <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+                        <Button type="submit" variant="contained" color="primary" disabled={isSubmitting ?? false}>
                             {t("common:actions.submit")}
                         </Button>
                     </Stack>

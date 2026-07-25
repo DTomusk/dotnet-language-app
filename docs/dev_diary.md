@@ -1,6 +1,12 @@
+# 2026-07-25
+## A quick break 
+Today, I wanted to complete a pull request for the frontend stuff I have at the moment and take a break from the project to build a small console app for playing with concurrency. Concurrency is one of those big issues that comes up in software development and, while I think I have a good grasp on it, I would like to sharpen my instincts around it and increase my confidence. So, today I would like to make a couple of changes to the frontend (maybe just some form logic on the submission page), and then I'll work through some toy examples of situations where a lack of concurrency handling causes problems, and how proper concurrency handling can remediate those problems. For me, it's not enough to kind of get things, I want to feel confident in them so I can spot issues in new situations more easily and have less of a chance of looking over things. 
+
+Also, one quick thought I just had, I had to run a couple of commands in different windows to get my .net, python and frontend running. I know Docker compose solves this problem, but I find it annoying to work with because it can be slow to spin up. So, I should write a script that gets everything running. 
+
 # 2026-07-24
 ## Where to stop 
-I've done that thing again where I've taken on too much in one branch, and now I'm just thinking of a sensible place to stop before I take on new work. 
+I've done that thing again where I've taken on too much in one branch, and now I'm just thinking of a sensible place to stop before I take on new work. I think I'm close. I've implemented auth and a couple of the language practice endpoints. There are still quite a few endpoints that we're not using, and the frontend will need a fair bit of work for all of those to work together. 
 
 # 2026-07-22
 ## Submission frontend 

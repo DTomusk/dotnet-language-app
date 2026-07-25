@@ -9,6 +9,7 @@ import { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 export default function PracticePage() {
     const { t } = useTranslation(["common"]);
@@ -57,6 +58,21 @@ export default function PracticePage() {
     }
 
     return (
-        <SubmissionForm onSubmit={onSubmit} />
+        <Stack spacing={2} sx={{ maxWidth: 600, margin: "0 auto", p: 4 }}>
+            {submissionMutation.isError && (
+                <Alert severity="error">
+                    {t("common:error")}: {submissionMutation.error?.message}
+                </Alert>
+            )}
+            {submissionMutation.isSuccess && (
+                <Alert severity="success">
+                    {t("common:success")}
+                </Alert>
+            )}
+            <SubmissionForm onSubmit={onSubmit} 
+                            isSubmitting={submissionMutation.isPending}
+                            isSuccess={submissionMutation.isSuccess}
+            />
+        </Stack>
     );
 }
