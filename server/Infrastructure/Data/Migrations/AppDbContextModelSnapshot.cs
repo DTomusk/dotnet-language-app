@@ -229,6 +229,45 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsMany("Domain.LanguagePractice.ValueObjects.LanguageLearnerStats", "LanguageStats", b1 =>
+                        {
+                            b1.Property<Guid>("LanguageLearnerId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("LanguageCode")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)");
+
+                            b1.Property<DateTime?>("LastSubmissionAt")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<DateTime>("StartedLearningAt")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<int>("TotalSubmissions")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("UniqueLemmas")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("LanguageLearnerId", "Id");
+
+                            b1.HasIndex("LanguageCode", "LanguageLearnerId")
+                                .IsUnique();
+
+                            b1.ToTable("LearnerLanguageStats", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("LanguageLearnerId");
+                        });
+
                     b.OwnsMany("Domain.LanguagePractice.ValueObjects.LemmaStatistic", "LemmaStatistics", b1 =>
                         {
                             b1.Property<Guid>("Id")
@@ -266,6 +305,8 @@ namespace Infrastructure.Data.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("LanguageLearnerId");
                         });
+
+                    b.Navigation("LanguageStats");
 
                     b.Navigation("LemmaStatistics");
                 });

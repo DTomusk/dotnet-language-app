@@ -2,6 +2,7 @@
 using Application.Auth.DTOs;
 using Application.Auth.Handlers;
 using Application.LanguagePractice.Commands;
+using Application.LanguagePractice.DTOs;
 using Application.LanguagePractice.Handlers;
 using Application.LanguagePractice.Queries;
 using Application.Shared.Interfaces;
@@ -27,6 +28,7 @@ public static class Register
         services.AddScoped<ICommandHandler<SetPracticeLanguageCommand>, SetPracticeLanguageCommandHandler>();
         services.AddScoped<IQueryHandler<GetUserLanguageQuery, string>, GetUserLanguageQueryHandler>();
         services.AddScoped<IQueryHandler<GetLemmaStatsQuery, IEnumerable<LemmaStatistic>>, GetUserLemmaStatsQueryHandler>();
+        services.AddScoped<IQueryHandler<GetActiveLanguageStatsQuery, LanguageStatsResponse>, GetActiveLanguageStatsQueryHandler>();
 
         services.AddScoped<IEventHandler<UserCreatedEvent>, UserCreatedEventHandler>();
         services.AddScoped<IEventHandler<LanguageSubmissionCreatedEvent>, SubmissionCreatedEventHandler>();

@@ -2,7 +2,6 @@
 using Application.Submissions.DTOs;
 using Application.Submissions.Interfaces;
 using Application.Submissions.Queries;
-using Domain.Shared.Results;
 
 namespace Application.Submissions.Handlers;
 
