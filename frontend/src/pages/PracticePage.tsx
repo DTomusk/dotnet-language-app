@@ -27,6 +27,9 @@ export default function PracticePage() {
         await refetch();
     };
 
+    // If submit succeeds, redirect to submission page (which will show state of analysis and link to analysis once done)
+    // If it fails, show error and disable submit button until user changes the input
+    // 
     const onSubmit = async (formData: SubmissionSchema) => {
         const response = await submissionMutation.mutateAsync(formData);
         console.log("Submission response:", response);

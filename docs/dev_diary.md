@@ -1,3 +1,7 @@
+# 2026-07-24
+## Where to stop 
+I've done that thing again where I've taken on too much in one branch, and now I'm just thinking of a sensible place to stop before I take on new work. 
+
 # 2026-07-22
 ## Submission frontend 
 I've made good progress on the frontend so far. I have an auth form that can be used for login and registration, and I have a form that can be used for language submissions. The next thing that I need to do is a screen where you choose the language you want to practice in (initially), and that will hook up to the current endpoint that sets the active language on a language learner. 
