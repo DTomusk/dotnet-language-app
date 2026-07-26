@@ -1,15 +1,16 @@
 from contextlib import asynccontextmanager
-import os
 
 from fastapi import FastAPI
-
-DEFAULT_MODEL = os.getenv("NLP_MODEL", "it_core_news_sm")
 
 LANGUAGE_CONFIG = {
     "it": {
         "model": "it_core_news_sm",
         "description": "Italian language model for spaCy",
     },
+    "de": {
+        "model": "de_core_news_sm",
+        "description": "German language model for spaCy",
+    }
 }
 
 @asynccontextmanager

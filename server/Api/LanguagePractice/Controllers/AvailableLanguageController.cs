@@ -1,4 +1,6 @@
-﻿using Api.Shared.RateLimiting;
+﻿using Api.LanguagePractice.DTOs;
+using Api.Shared.RateLimiting;
+using Domain.LanguagePractice.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -11,20 +13,13 @@ namespace Api.LanguagePractice.Controllers;
 [EnableRateLimiting(RateLimitingConfiguration.AuthenticatedPolicy)]
 public class AvailableLanguageController : ControllerBase
 {
-    // TODO: configure somewhere
-    // Hardcoded now for simplicity
     [HttpGet]
     public async Task<IActionResult> GetAvailableLanguages()
     {
-        var availableLanguages = new List<AvailableLanguageDTO>
-        {
-            new AvailableLanguageDTO("it", "Italian"),
-        };
+        var availableLanguages = LanguageCode.GetAllSupportedLanguages()
+            .Select(lang => new AvailableLanguageResponse(lang.Code, lang.Name))
+            .ToList();
 
         return Ok(availableLanguages);
     }
 }
-
-public record AvailableLanguageDTO(string LanguageCode,
-    string LanguageName
-);
