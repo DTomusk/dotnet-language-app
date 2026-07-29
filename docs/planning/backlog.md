@@ -1,11 +1,4 @@
 ## Planning
-- [ ] Deployment
-    - Priority: 
-    - Area: 
-    - Type: (bug, tech debt, feature)
-    - Why: 
-    - DoD: 
-
 - [ ] Validation pipeline
     - Priority: high
     - Area: language analysis
@@ -15,15 +8,6 @@
         - [ ] in memory language agnostic processing 
         - [ ] in memory language specific validation strategies (heuristics)
         - [ ] python language detection pipeline 
-
-- [ ] Frontend
-    - Priority: 
-    - Area: 
-    - Type: (bug, tech debt, feature)
-    - Why: 
-    - DoD: 
-
-
 
 ## Item template 
 
@@ -35,6 +19,24 @@
     - DoD: 
 
 ## Done
+- [x] Deployment
+    - Priority: 
+    - Area: 
+    - Type: (bug, tech debt, feature)
+    - Why: 
+    - DoD: 
+        - [x] .net server deployed 
+        - [x] python deployed 
+        - [x] basic ci/cd implemented
+
+- [x] Frontend
+    - Priority: 
+    - Area: 
+    - Type: (bug, tech debt, feature)
+    - Why: 
+    - DoD: 
+        - [x] site built 
+
 - [x] Multi-language support
     - Priority: high 
     - Area: throughout

@@ -41,6 +41,8 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
         if (languageCode == null)
             return Result<Guid>.Failure(new Error($"Invalid language code: {languageCode}", ErrorType.Validation));
 
+        // Add validation pipeline here
+
         var submission = Submission.Create(command.UserID, languageCode, command.Text);
 
         await _submissionRepository.CreateAsync(submission, cancellationToken);

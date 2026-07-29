@@ -1,3 +1,7 @@
+# 2026-07-29
+## Language validation
+This is something I've been excited about implementing. Before a submission gets created and stored, I want to implement a validation pipeline that essentially checks whether the text is in all likelihood in the language learner's active language. For this, I'm planning to use the strategy pattern, each enabled language will have a strategy implemented for its own checks. There may be some shared functionality across strategies (e.g. languages that use the Latin alphabet might have some similar checks, or languages that use whitespaces), but each strategy will be unique to the language. Strategies should be forgiving, they should express a likelihood rather than a certainty (e.g. we shouldn't have zero tolerance for special characters, but we should have relatively low tolerance). The validation result should give actionable feedback to the user. Later down the line, we might want to allow the user to feed back on the validation if they run into validation problems with valid texts. 
+
 # 2026-07-26
 ## Multi-language support
 I think it's important that the system is able to support multiple languages, because then we can support any number of languages. Currently, we only support one. I want to document how I go about adding a new language so that later I can build a system to automate it if I need to, or at least have some docs that make adding a new language easier. 
