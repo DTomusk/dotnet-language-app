@@ -32,10 +32,25 @@ public class LanguageCodeTests
     }
 
     [Theory]
+    [InlineData("de")]
+    [InlineData("DE")]
+    [InlineData("De")]
+    [InlineData("dE")]
+    public void From_Should_Return_German_For_Valid_German_Codes(string code)
+    {
+        // Act
+        var languageCode = LanguageCode.From(code);
+
+        // Assert
+        languageCode.Should().Be(LanguageCode.German);
+        languageCode.Value.Should().Be("de");
+    }
+
+    [Theory]
     [InlineData("en")]
     [InlineData("fr")]
     [InlineData("es")]
-    [InlineData("de")]
+    [InlineData("jp")]
     [InlineData("invalid")]
     [InlineData("")]
     public void From_Should_Throw_ArgumentException_For_Unsupported_Language_Codes(string invalidCode)

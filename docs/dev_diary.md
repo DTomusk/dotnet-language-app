@@ -1,3 +1,17 @@
+# 2026-07-26
+## Multi-language support
+I think it's important that the system is able to support multiple languages, because then we can support any number of languages. Currently, we only support one. I want to document how I go about adding a new language so that later I can build a system to automate it if I need to, or at least have some docs that make adding a new language easier. 
+
+### Adding a new language: 
+TODO: extract this into a separate doc 
+
+1. Add language code to LanguageCode value object 
+2. Add language code and spacy model name pair to lifecycle.py map 
+3. Run `python -m spacy download de_core_news_sm` in `./python` with the venv activated
+4. Run `pip freeze > requirements.txt` in `./python`
+
+I think that should be it for now, but I would like to test it out, and I would like to create a component for selecting your current language context, that could go in the navbar. 
+
 # 2026-07-25
 ## A quick break 
 Today, I wanted to complete a pull request for the frontend stuff I have at the moment and take a break from the project to build a small console app for playing with concurrency. Concurrency is one of those big issues that comes up in software development and, while I think I have a good grasp on it, I would like to sharpen my instincts around it and increase my confidence. So, today I would like to make a couple of changes to the frontend (maybe just some form logic on the submission page), and then I'll work through some toy examples of situations where a lack of concurrency handling causes problems, and how proper concurrency handling can remediate those problems. For me, it's not enough to kind of get things, I want to feel confident in them so I can spot issues in new situations more easily and have less of a chance of looking over things. 

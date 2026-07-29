@@ -32,6 +32,12 @@ public class LanguageLearner
             return Result.Failure(new Error("LanguageCode cannot be null.", ErrorType.Validation));
 
         ActiveLanguage = languageCode;
+
+        // Check if the language stats for the given language code already exist, if not create a new LanguageLearnerStats entry
+        if (LanguageStats.All(x => x.LanguageCode != languageCode))
+        {
+            LanguageStats.Add(new LanguageLearnerStats(languageCode, DateTime.UtcNow, UserId));
+        }
         return Result.Success();
     }
 
@@ -61,7 +67,7 @@ public class LanguageLearner
                     Frequency = existingStat.Frequency + 1,
                     LastUsedAt = now
                 };
-                
+
                 // Records are immutable
                 LemmaStatistics.Remove(existingStat);
                 LemmaStatistics.Add(updated);
@@ -96,7 +102,7 @@ public class LanguageLearner
                 UniqueLemmas = existingStat.UniqueLemmas + newLemmasCount,
                 LastSubmissionAt = DateTime.UtcNow
             };
-            
+
             LanguageStats.Remove(existingStat);
             LanguageStats.Add(updated);
         }

@@ -89,6 +89,47 @@ public class LanguageLearnerTests
     }
 
     [Fact]
+    public void SetActiveLanguage_Should_Create_New_LanguageStats_When_None_Exist()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var learnerResult = LanguageLearner.Create(userId);
+        var learner = learnerResult.Value;
+        var languageCode = LanguageCode.Italian;
+
+        // Act
+        var result = learner.SetActiveLanguage(languageCode);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        learner.LanguageStats.Should().HaveCount(1);
+        var stat = learner.LanguageStats.First();
+        stat.LanguageCode.Should().Be(languageCode);
+        stat.LanguageLearnerId.Should().Be(userId);
+    }
+
+    [Fact]
+    public void SetActiveLanguage_Should_Not_Create_Duplicate_LanguageStats_If_Already_Exists()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var learnerResult = LanguageLearner.Create(userId);
+        var learner = learnerResult.Value;
+        var languageCode = LanguageCode.Italian;
+
+        // Act
+        learner.SetActiveLanguage(languageCode);
+        var countAfterFirst = learner.LanguageStats.Count;
+        learner.SetActiveLanguage(languageCode);
+        var countAfterSecond = learner.LanguageStats.Count;
+
+        // Assert
+        countAfterFirst.Should().Be(1);
+        countAfterSecond.Should().Be(1);
+        learner.LanguageStats.Should().HaveCount(1);
+    }
+
+    [Fact]
     public void ClearActiveLanguage_Should_Set_ActiveLanguage_To_Null()
     {
         // Arrange

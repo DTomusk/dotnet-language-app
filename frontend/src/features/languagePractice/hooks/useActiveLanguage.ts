@@ -19,9 +19,10 @@ export function useSetActiveLanguage() {
 
     return useMutation({
         mutationFn: async (input: SetLanguageRequest) => setMyLanguage(input),
-        onSuccess: () => {
-            // Remove cached value so next read must fetch the latest language.
-            queryClient.removeQueries({ queryKey: ACTIVE_LANGUAGE_QUERY_KEY, exact: true });
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ["me", "language"],
+            });
         },
     });
 }
