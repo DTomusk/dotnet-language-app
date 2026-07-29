@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Domain.LanguagePractice.ValueObjects;
+﻿namespace Domain.LanguagePractice.ValueObjects;
 
 /// <summary>
 /// Represents aggregated stats for a language learner in the context of a language
@@ -18,9 +14,9 @@ public record LanguageLearnerStats
 
     private LanguageLearnerStats() { }
 
-    public LanguageLearnerStats(LanguageCode languageCode, 
-        int totalSubmissions, 
-        int uniqueLemmas, 
+    public LanguageLearnerStats(LanguageCode languageCode,
+        int totalSubmissions,
+        int uniqueLemmas,
         DateTime startedLearningAt,
         Guid languageLearnerId)
     {
@@ -30,5 +26,12 @@ public record LanguageLearnerStats
         StartedLearningAt = startedLearningAt;
         LanguageLearnerId = languageLearnerId;
         LastSubmissionAt = startedLearningAt;
+    }
+
+    public LanguageLearnerStats(LanguageCode languageCode, DateTime startedLearningAt, Guid languageLearnerId)
+    {
+        LanguageCode = languageCode;
+        StartedLearningAt = startedLearningAt;
+        LanguageLearnerId = languageLearnerId;
     }
 }
