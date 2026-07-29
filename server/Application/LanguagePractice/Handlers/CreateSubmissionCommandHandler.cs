@@ -14,17 +14,20 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
     private readonly ILanguageLearnerRepository _languageLearnerRepository;
     private readonly IDomainEventPublisher _eventPublisher;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILanguageValidationService _languageValidationService;
 
     public CreateSubmissionCommandHandler(
         ISubmissionRepository submissionRepository,
         ILanguageLearnerRepository languageLearnerRepository,
         IDomainEventPublisher eventPublisher,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ILanguageValidationService languageValidationService)
     {
         _submissionRepository = submissionRepository;
         _languageLearnerRepository = languageLearnerRepository;
         _eventPublisher = eventPublisher;
         _unitOfWork = unitOfWork;
+        _languageValidationService = languageValidationService;
     }
 
     public async Task<Result<Guid>> HandleAsync(
@@ -41,7 +44,10 @@ public class CreateSubmissionCommandHandler : ICommandHandler<CreateSubmissionCo
         if (languageCode == null)
             return Result<Guid>.Failure(new Error($"Invalid language code: {languageCode}", ErrorType.Validation));
 
-        // Add validation pipeline here
+        // Validate that the given text is likely to be in the expected language
+        var validationResult = await _languageValidationService.ValidateTextInLanguageAsync(languageCode, command.Text, cancellationToken);
+        if (validationResult.IsFailure)
+            return Result<Guid>.Failure(new Error($"Text validation failed for language code: {languageCode}. Reason: {validationResult.Error.Message}", ErrorType.Validation));
 
         var submission = Submission.Create(command.UserID, languageCode, command.Text);
 

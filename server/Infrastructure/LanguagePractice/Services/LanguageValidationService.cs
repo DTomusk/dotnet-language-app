@@ -13,13 +13,18 @@ public class LanguageValidationService : ILanguageValidationService
         _validationStrategies = validationStrategies;
     }
 
-    public Task<Result> ValidateTextInLanguageAsync(LanguageCode languageCode, string text, CancellationToken cancellationToken)
+    public async Task<Result> ValidateTextInLanguageAsync(LanguageCode languageCode, string text, CancellationToken cancellationToken)
     {
-        if (_validationStrategies.TryGetValue(languageCode, out var strategy))
-        {
-            return strategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
-        }
+        var hasStrategy = _validationStrategies.TryGetValue(languageCode, out var strategy);
+        if (!hasStrategy || strategy == null)
+            return Result.Failure(new Error($"No validation strategy found for language code: {languageCode}", ErrorType.Internal));
 
-        return Task.FromResult(Result.Failure(new Error($"No validation strategy found for language code: {languageCode}", ErrorType.Internal)));
+        var strategyResult = await strategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
+        if (strategyResult.IsFailure)
+            return Result.Failure(new Error($"Validation failed for language code: {languageCode}. Reason: {strategyResult.Error.Message}", ErrorType.Validation));
+
+        // TODO: call external validation service
+
+        return Result.Success();
     }
 }

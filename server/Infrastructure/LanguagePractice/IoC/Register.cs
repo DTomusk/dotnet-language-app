@@ -1,10 +1,12 @@
 ﻿using Application.LanguagePractice.Interfaces;
 using Application.Shared.Interfaces;
 using Application.Submissions.Interfaces;
+using Domain.LanguagePractice.ValueObjects;
 using Infrastructure.LanguagePractice.Configuration;
 using Infrastructure.LanguagePractice.QueryServices;
 using Infrastructure.LanguagePractice.Repositories;
 using Infrastructure.LanguagePractice.Services;
+using Infrastructure.LanguagePractice.Strategies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -34,8 +36,24 @@ public static class Register
         services.AddScoped<ILanguageLearnerQueryService, LanguageLearnerQueryService>();
         services.AddScoped<ILanguageAnalysisRepository, LanguageAnalysisRepository>();
 
+        // Validation strategies
+        services.AddScoped<ILanguageValidationStrategy, ItalianValidationStrategy>();
+        services.AddScoped<ILanguageValidationStrategy, GermanValidationStrategy>();
+
+        services.AddScoped<IDictionary<LanguageCode, ILanguageValidationStrategy>>(serviceProvider =>
+        {
+            var strategies = serviceProvider.GetServices<ILanguageValidationStrategy>().ToList();
+            return new Dictionary<LanguageCode, ILanguageValidationStrategy>
+            {
+                { LanguageCode.Italian, strategies.OfType<ItalianValidationStrategy>().First() },
+                { LanguageCode.German, strategies.OfType<GermanValidationStrategy>().First() }
+            };
+        });
+
+        services.AddScoped<ILanguageValidationService, LanguageValidationService>();
+
         // Cast ILanguageAnalysisService to IHealthCheck for health check registration as the concrete type implements both
-        services.AddScoped<IHealthCheck>(sp => (IHealthCheck)sp.GetRequiredService<ILanguageAnalysisService>());
+        services.AddScoped(sp => (IHealthCheck)sp.GetRequiredService<ILanguageAnalysisService>());
         return services;
     }
 }
