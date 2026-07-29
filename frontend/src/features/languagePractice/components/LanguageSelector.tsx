@@ -2,10 +2,10 @@ import { Alert, Button, Paper, Stack, Typography } from "@mui/material";
 import Spinner from "../../../components/Spinner";
 import { useTranslation } from "react-i18next";
 import DropdownSelect from "../../../components/DropdownSelect.tsx";
-import type { Language } from "../types/types";
+import type { DropdownSelectItem } from "../../../components/DropdownSelect";
 
 type LanguageSelectorProps = {
-    languages?: Language[];
+    items: DropdownSelectItem[];
     isLoading: boolean;
     isSubmitting: boolean;
     selectedLanguage: string;
@@ -14,7 +14,7 @@ type LanguageSelectorProps = {
 };
 
 export default function LanguageSelector({
-    languages,
+    items,
     isLoading,
     isSubmitting,
     selectedLanguage,
@@ -27,7 +27,7 @@ export default function LanguageSelector({
         return <Spinner aria-label={t("languagePractice:languageSelection.loadingLanguages")} />;
     }
 
-    if (!languages || languages.length === 0) {
+    if (items.length === 0) {
         return <Alert severity="error">{t("languagePractice:languageSelection.noLanguagesAvailable")}</Alert>;
     }
 
@@ -42,10 +42,7 @@ export default function LanguageSelector({
                     value={selectedLanguage}
                     onChange={onLanguageChange}
                     placeholder={t("languagePractice:languageSelection.selectLanguagePlaceholder")}
-                    items={languages.map((language) => ({
-                        value: language.languageCode,
-                        label: language.languageName,
-                    }))}
+                    items={items}
                 />
                 <Button
                     variant="contained"

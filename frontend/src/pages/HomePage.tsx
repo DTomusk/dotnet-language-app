@@ -1,13 +1,11 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useLanguageStats } from "../features/languagePractice/hooks/useLanguageStats";
-import { useGetActiveLanguage, useSetActiveLanguage } from "../features/languagePractice/hooks/useActiveLanguage";
-import { useAvailableLanguages } from "../features/languagePractice/hooks/useAvailableLanguages";
 import Spinner from "../components/Spinner";
 import Alert from "@mui/material/Alert";
 import LanguageSelector from "../features/languagePractice/components/LanguageSelector";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLanguageSelection } from "../features/languagePractice/hooks/useLanguageSelection";
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -15,19 +13,17 @@ export default function HomePage() {
     
     const { data: languageStats } = useLanguageStats();
 
-    const { data, isLoading, error, refetch } = useGetActiveLanguage();
-    const { data: languages, isLoading: isLoadingLanguages } = useAvailableLanguages();
-    const setLanguageMutation = useSetActiveLanguage();
-    const [selectedLanguage, setSelectedLanguage] = useState("");
-
-    const onConfirmLanguage = async () => {
-        if (!selectedLanguage) {
-            return;
-        }
-
-        await setLanguageMutation.mutateAsync({ languageCode: selectedLanguage });
-        await refetch();
-    };
+    const {
+        activeLanguage,
+        error,
+        languageItems,
+        selectedLanguage,
+        setSelectedLanguage,
+        confirmLanguage,
+        isLoading,
+        isLoadingLanguages,
+        isSubmitting,
+    } = useLanguageSelection();
 
     if (isLoading) {
         return <Spinner aria-label={t("common:loading")} />;
@@ -37,15 +33,15 @@ export default function HomePage() {
         return <Alert severity="error">{t("common:error")}: {error.message}</Alert>;
     }
 
-    if (!data) {
+    if (!activeLanguage) {
         return (
             <LanguageSelector
-                languages={languages}
+                items={languageItems}
                 isLoading={isLoadingLanguages}
-                isSubmitting={setLanguageMutation.isPending}
+                isSubmitting={isSubmitting}
                 selectedLanguage={selectedLanguage}
                 onLanguageChange={setSelectedLanguage}
-                onConfirm={onConfirmLanguage}
+                onConfirm={confirmLanguage}
             />
         );
     }
