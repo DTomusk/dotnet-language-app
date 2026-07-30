@@ -20,8 +20,19 @@ public static class Register
         IConfiguration configuration)
     {
         services.Configure<LanguageAnalysisApiOptions>(configuration.GetSection(LanguageAnalysisApiOptions.SectionName));
-        services.AddHttpClient<ILanguageAnalysisService, LanguageAnalysisService>((serviceProvider, client) =>
+        services.AddHttpClient<IExternalLanguageAnalysisService, ExternalLanguageAnalysisService>((serviceProvider, client) =>
         {
+            var options = serviceProvider.GetRequiredService<IOptions<LanguageAnalysisApiOptions>>().Value;
+
+            client.BaseAddress = new Uri(options.BaseUrl);
+
+            client.Timeout = options.Timeout;
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
+
+        services.AddHttpClient<IExternalLanguageValidationService, ExternalLanguageValidationService>((serviceProvider, client) =>
+        {
+            // Use same config as language analysis, but can decouple in the future
             var options = serviceProvider.GetRequiredService<IOptions<LanguageAnalysisApiOptions>>().Value;
 
             client.BaseAddress = new Uri(options.BaseUrl);
@@ -51,7 +62,8 @@ public static class Register
         });
 
         // Cast ILanguageAnalysisService to IHealthCheck for health check registration as the concrete type implements both
-        services.AddScoped(sp => (IHealthCheck)sp.GetRequiredService<ILanguageAnalysisService>());
+        services.AddScoped(sp => (IHealthCheck)sp.GetRequiredService<IExternalLanguageAnalysisService>());
+        services.AddScoped(sp => (IHealthCheck)sp.GetRequiredService<IExternalLanguageValidationService>());
         return services;
     }
 }

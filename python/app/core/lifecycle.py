@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from lingua import Language, LanguageDetector
+from lingua import Language, LanguageDetector, LanguageDetectorBuilder
 
 LANGUAGE_CONFIG = {
     "it": {
@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
     ]
     # Build singleton once at startup
     app.state.language_detector = (
-        LanguageDetector.Builder
+        LanguageDetectorBuilder
         .from_languages(*supported_detection_languages)
         .build()
     )

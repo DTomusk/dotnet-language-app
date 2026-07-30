@@ -4,7 +4,7 @@ using Domain.Shared.Results;
 
 namespace Application.LanguagePractice.Interfaces;
 
-public interface ILanguageAnalysisService
+public interface IExternalLanguageAnalysisService
 {
     Task<Result<AnalysisResponse>> AnalyseTextAsync(LanguageCode languageCode, string text, CancellationToken cancellationToken = default);
 }

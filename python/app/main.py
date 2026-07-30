@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.core.lifecycle import lifespan
 from app.api.routes.health import router as health_router
 from app.api.routes.analyze import router as analyze_router
+from app.api.routes.validate import router as validate_router
 
 app = FastAPI(
     title="NLP API",
@@ -11,3 +12,5 @@ app = FastAPI(
 
 app.include_router(health_router)
 app.include_router(analyze_router)
+app.include_router(validate_router)
+

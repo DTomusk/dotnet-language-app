@@ -9,13 +9,13 @@ namespace Application.LanguagePractice.Handlers;
 
 public class SubmissionCreatedEventHandler : IEventHandler<LanguageSubmissionCreatedEvent>
 {
-    private readonly ILanguageAnalysisService _analysisService;
+    private readonly IExternalLanguageAnalysisService _analysisService;
     private readonly ILanguageAnalysisRepository _analysisRepo;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDomainEventPublisher _eventPublisher;
     private readonly ILogger<SubmissionCreatedEventHandler> _logger;
 
-    public SubmissionCreatedEventHandler(ILanguageAnalysisService analysisService,
+    public SubmissionCreatedEventHandler(IExternalLanguageAnalysisService analysisService,
         ILanguageAnalysisRepository analysisRepo,
         IUnitOfWork unitOfWork,
         IDomainEventPublisher eventPublisher,

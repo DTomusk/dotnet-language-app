@@ -7,10 +7,12 @@ namespace Application.LanguagePractice.Services;
 public class LanguageValidationService : ILanguageValidationService
 {
     private readonly IDictionary<LanguageCode, ILanguageValidationStrategy> _validationStrategies;
+    private readonly IExternalLanguageValidationService _externalLanguageValidationService;
 
-    public LanguageValidationService(IDictionary<LanguageCode, ILanguageValidationStrategy> validationStrategies)
+    public LanguageValidationService(IDictionary<LanguageCode, ILanguageValidationStrategy> validationStrategies, IExternalLanguageValidationService externalLanguageValidationService)
     {
         _validationStrategies = validationStrategies;
+        _externalLanguageValidationService = externalLanguageValidationService;
     }
 
     public async Task<Result> ValidateTextInLanguageAsync(LanguageCode languageCode, string text, CancellationToken cancellationToken)
@@ -23,7 +25,12 @@ public class LanguageValidationService : ILanguageValidationService
         if (strategyResult.IsFailure)
             return strategyResult;
 
-        // TODO: call external validation service
+        var externalResult = await _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken);
+        if (externalResult.IsFailure)
+            return externalResult;
+
+        if (!externalResult.Value.IsValid)
+            return Result.Failure(new Error($"Text does not appear to be in {languageCode}", ErrorType.Validation));
 
         return Result.Success();
     }
