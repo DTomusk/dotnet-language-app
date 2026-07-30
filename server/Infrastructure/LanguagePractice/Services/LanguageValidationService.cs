@@ -21,7 +21,7 @@ public class LanguageValidationService : ILanguageValidationService
 
         var strategyResult = await strategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
         if (strategyResult.IsFailure)
-            return Result.Failure(new Error($"Validation failed for language code: {languageCode}. Reason: {strategyResult.Error.Message}", ErrorType.Validation));
+            return strategyResult;
 
         // TODO: call external validation service
 
