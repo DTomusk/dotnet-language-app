@@ -58,3 +58,4 @@ nunit-*.xml
 /server/.vs
 /.vs/CopilotSnapshots/*
 python/app/**/__pycache__/
+python/tests/__pycache__/
