@@ -2,7 +2,7 @@
 using Domain.LanguagePractice.ValueObjects;
 using Domain.Shared.Results;
 
-namespace Infrastructure.LanguagePractice.Services;
+namespace Application.LanguagePractice.Services;
 
 public class LanguageValidationService : ILanguageValidationService
 {

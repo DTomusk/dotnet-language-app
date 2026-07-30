@@ -50,8 +50,6 @@ public static class Register
             };
         });
 
-        services.AddScoped<ILanguageValidationService, LanguageValidationService>();
-
         // Cast ILanguageAnalysisService to IHealthCheck for health check registration as the concrete type implements both
         services.AddScoped(sp => (IHealthCheck)sp.GetRequiredService<ILanguageAnalysisService>());
         return services;

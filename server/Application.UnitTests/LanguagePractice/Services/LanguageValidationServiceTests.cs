@@ -1,9 +1,10 @@
 ﻿using Application.LanguagePractice.Interfaces;
+using Application.LanguagePractice.Services;
 using Domain.LanguagePractice.ValueObjects;
 using Domain.Shared.Results;
 using FluentAssertions;
-using Infrastructure.LanguagePractice.Services;
 using NSubstitute;
+using Xunit;
 
 namespace Application.UnitTests.LanguagePractice.Services;
 
