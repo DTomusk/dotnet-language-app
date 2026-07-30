@@ -109,10 +109,23 @@ async function handleErrorResponse(response: Response) {
         errorData = { message: errorText || 'An error occurred' };
     }
 
-    const errorMessage =
-        errorData.error ||
-        errorData.message ||
-        'An error occurred';
+    let errorMessage: string;
+
+    if (errorData.errors && typeof errorData.errors === 'object') {
+        const fieldErrors = Object.entries(errorData.errors)
+            .map(([field, messages]: [string, any]) => {
+                const msgs = Array.isArray(messages) ? messages : [messages];
+                return msgs.map(msg => `${field}: ${msg}`).join('\n');
+            })
+            .join('\n');
+        errorMessage = fieldErrors || errorData.title || 'Validation failed';
+    } else {
+        // Fallback for other error formats
+        errorMessage =
+            errorData.error ||
+            errorData.message ||
+            'An error occurred';
+    }
 
     throw new ApiError(errorMessage, response.status, errorData);
 }

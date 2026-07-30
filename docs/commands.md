@@ -5,3 +5,6 @@
 
 # Python 
 `uvicorn app.main:app --port 8000`
+
+# Frontend tests 
+`pnpm vitest`

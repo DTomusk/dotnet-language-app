@@ -54,6 +54,12 @@ export default function SubmissionForm({ onSubmit, isSubmitting, isSuccess }: Su
                                     value: 500,
                                     message: t("languagePractice:submission.validation.textMaxLength"),
                                 },
+                                validate: (value) => {
+                                    if (value.trim().length === 0) {
+                                        return t("languagePractice:submission.validation.textRequired");
+                                    }
+                                    return true;
+                                },
                             }}
                             render={({ field }) => (
                                 <TextField

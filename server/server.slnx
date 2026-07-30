@@ -2,6 +2,7 @@
   <Folder Name="/tests/">
     <Project Path="Application.UnitTests/Application.UnitTests.csproj" Id="ab4e8d1f-cbbe-4232-a562-f03481c3e772" />
     <Project Path="Domain.UnitTests/Domain.UnitTests.csproj" Id="2cb76326-8b31-498f-a441-edc61f095fe3" />
+    <Project Path="Infrastructure.UnitTests/Infrastructure.UnitTests.csproj" Id="886c32d0-0b53-4d82-9639-19852f2a139a" />
   </Folder>
   <Project Path="Api/Api.csproj" />
   <Project Path="Application/Application.csproj" Id="2d89da4c-9611-4886-8d28-99248f76d49a" />

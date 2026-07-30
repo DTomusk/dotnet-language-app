@@ -8,12 +8,12 @@ using System.Net.Http.Json;
 
 namespace Infrastructure.LanguagePractice.Services;
 
-public class LanguageAnalysisService : ILanguageAnalysisService, IHealthCheck
+public class ExternalLanguageAnalysisService : IExternalLanguageAnalysisService, IHealthCheck
 {
     private readonly HttpClient _httpClient;
-    private readonly ILogger<LanguageAnalysisService> _logger;
+    private readonly ILogger<ExternalLanguageAnalysisService> _logger;
 
-    public LanguageAnalysisService(HttpClient httpClient, ILogger<LanguageAnalysisService> logger)
+    public ExternalLanguageAnalysisService(HttpClient httpClient, ILogger<ExternalLanguageAnalysisService> logger)
     {
         _httpClient = httpClient;
         _logger = logger;

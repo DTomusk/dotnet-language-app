@@ -1,10 +1,12 @@
 ﻿using Application.LanguagePractice.Interfaces;
 using Application.Shared.Interfaces;
 using Application.Submissions.Interfaces;
+using Domain.LanguagePractice.ValueObjects;
 using Infrastructure.LanguagePractice.Configuration;
 using Infrastructure.LanguagePractice.QueryServices;
 using Infrastructure.LanguagePractice.Repositories;
 using Infrastructure.LanguagePractice.Services;
+using Infrastructure.LanguagePractice.Strategies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -18,8 +20,19 @@ public static class Register
         IConfiguration configuration)
     {
         services.Configure<LanguageAnalysisApiOptions>(configuration.GetSection(LanguageAnalysisApiOptions.SectionName));
-        services.AddHttpClient<ILanguageAnalysisService, LanguageAnalysisService>((serviceProvider, client) =>
+        services.AddHttpClient<IExternalLanguageAnalysisService, ExternalLanguageAnalysisService>((serviceProvider, client) =>
         {
+            var options = serviceProvider.GetRequiredService<IOptions<LanguageAnalysisApiOptions>>().Value;
+
+            client.BaseAddress = new Uri(options.BaseUrl);
+
+            client.Timeout = options.Timeout;
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
+
+        services.AddHttpClient<IExternalLanguageValidationService, ExternalLanguageValidationService>((serviceProvider, client) =>
+        {
+            // Use same config as language analysis, but can decouple in the future
             var options = serviceProvider.GetRequiredService<IOptions<LanguageAnalysisApiOptions>>().Value;
 
             client.BaseAddress = new Uri(options.BaseUrl);
@@ -34,8 +47,23 @@ public static class Register
         services.AddScoped<ILanguageLearnerQueryService, LanguageLearnerQueryService>();
         services.AddScoped<ILanguageAnalysisRepository, LanguageAnalysisRepository>();
 
+        // Validation strategies
+        services.AddScoped<ILanguageValidationStrategy, ItalianValidationStrategy>();
+        services.AddScoped<ILanguageValidationStrategy, GermanValidationStrategy>();
+
+        services.AddScoped<IDictionary<LanguageCode, ILanguageValidationStrategy>>(serviceProvider =>
+        {
+            var strategies = serviceProvider.GetServices<ILanguageValidationStrategy>().ToList();
+            return new Dictionary<LanguageCode, ILanguageValidationStrategy>
+            {
+                { LanguageCode.Italian, strategies.OfType<ItalianValidationStrategy>().First() },
+                { LanguageCode.German, strategies.OfType<GermanValidationStrategy>().First() }
+            };
+        });
+
         // Cast ILanguageAnalysisService to IHealthCheck for health check registration as the concrete type implements both
-        services.AddScoped<IHealthCheck>(sp => (IHealthCheck)sp.GetRequiredService<ILanguageAnalysisService>());
+        services.AddScoped(sp => (IHealthCheck)sp.GetRequiredService<IExternalLanguageAnalysisService>());
+        services.AddScoped(sp => (IHealthCheck)sp.GetRequiredService<IExternalLanguageValidationService>());
         return services;
     }
 }
