@@ -1,4 +1,5 @@
-﻿using Application.LanguagePractice.Interfaces;
+﻿using Application.LanguagePractice.DTOs;
+using Application.LanguagePractice.Interfaces;
 using Application.LanguagePractice.Services;
 using Domain.LanguagePractice.ValueObjects;
 using Domain.Shared.Results;
@@ -12,12 +13,14 @@ public class LanguageValidationServiceTests
 {
     private readonly ILanguageValidationStrategy _italianStrategy;
     private readonly ILanguageValidationStrategy _germanStrategy;
+    private readonly IExternalLanguageValidationService _externalLanguageValidationService;
     private readonly LanguageValidationService _service;
 
     public LanguageValidationServiceTests()
     {
         _italianStrategy = Substitute.For<ILanguageValidationStrategy>();
         _germanStrategy = Substitute.For<ILanguageValidationStrategy>();
+        _externalLanguageValidationService = Substitute.For<IExternalLanguageValidationService>();
 
         var strategies = new Dictionary<LanguageCode, ILanguageValidationStrategy>
         {
@@ -25,7 +28,7 @@ public class LanguageValidationServiceTests
             { LanguageCode.German, _germanStrategy }
         };
 
-        _service = new LanguageValidationService(strategies);
+        _service = new LanguageValidationService(strategies, _externalLanguageValidationService);
     }
 
     [Fact]
@@ -38,6 +41,8 @@ public class LanguageValidationServiceTests
 
         _italianStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
             .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Success(new ValidationResponse(true)));
 
         // Act
         var result = await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
@@ -98,6 +103,8 @@ public class LanguageValidationServiceTests
 
         _italianStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
             .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Success(new ValidationResponse(true)));
 
         // Act
         await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
@@ -117,6 +124,8 @@ public class LanguageValidationServiceTests
 
         _germanStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
             .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Success(new ValidationResponse(true)));
 
         // Act
         await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
@@ -136,6 +145,8 @@ public class LanguageValidationServiceTests
 
         _italianStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
             .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Success(new ValidationResponse(true)));
 
         // Act
         await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
@@ -152,7 +163,7 @@ public class LanguageValidationServiceTests
         {
             { LanguageCode.Italian, null! }
         };
-        var serviceWithNullStrategy = new LanguageValidationService(strategies);
+        var serviceWithNullStrategy = new LanguageValidationService(strategies, _externalLanguageValidationService);
         var languageCode = LanguageCode.Italian;
         var text = "Test text";
         var cancellationToken = CancellationToken.None;
@@ -180,6 +191,8 @@ public class LanguageValidationServiceTests
 
         _germanStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
             .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Success(new ValidationResponse(true)));
 
         // Act
         await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
@@ -219,6 +232,8 @@ public class LanguageValidationServiceTests
 
         _germanStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
             .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Success(new ValidationResponse(true)));
 
         // Act
         var result = await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
@@ -227,6 +242,112 @@ public class LanguageValidationServiceTests
         result.IsSuccess.Should().BeTrue();
         result.Error.Should().BeNull();
         result.IsFailure.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ValidateTextInLanguageAsync_ShouldCallExternalService_WhenStrategySucceeds()
+    {
+        // Arrange
+        var languageCode = LanguageCode.Italian;
+        var text = "Ciao!";
+        var cancellationToken = CancellationToken.None;
+
+        _italianStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
+            .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Success(new ValidationResponse(true)));
+
+        // Act
+        await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
+
+        // Assert
+        await _externalLanguageValidationService.Received(1).ValidateTextAsync(languageCode, text, cancellationToken);
+    }
+
+    [Fact]
+    public async Task ValidateTextInLanguageAsync_ShouldNotCallExternalService_WhenStrategyFails()
+    {
+        // Arrange
+        var languageCode = LanguageCode.Italian;
+        var text = "Test text";
+        var cancellationToken = CancellationToken.None;
+        var strategyError = new Error("Strategy validation failed", ErrorType.Validation);
+
+        _italianStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
+            .Returns(Result.Failure(strategyError));
+
+        // Act
+        await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
+
+        // Assert
+        await _externalLanguageValidationService.DidNotReceive().ValidateTextAsync(Arg.Any<LanguageCode>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ValidateTextInLanguageAsync_ShouldReturnFailure_WhenExternalServiceReturnsFailure()
+    {
+        // Arrange
+        var languageCode = LanguageCode.Italian;
+        var text = "Test text";
+        var cancellationToken = CancellationToken.None;
+        var externalError = new Error("External service error", ErrorType.Internal);
+
+        _italianStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
+            .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Failure(externalError));
+
+        // Act
+        var result = await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().NotBeNull();
+        result.Error.Type.Should().Be(ErrorType.Internal);
+        result.Error.Message.Should().Be(externalError.Message);
+    }
+
+    [Fact]
+    public async Task ValidateTextInLanguageAsync_ShouldReturnFailure_WhenExternalServiceReturnsInvalidResult()
+    {
+        // Arrange
+        var languageCode = LanguageCode.Italian;
+        var text = "Test text";
+        var cancellationToken = CancellationToken.None;
+
+        _italianStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
+            .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Success(new ValidationResponse(false)));
+
+        // Act
+        var result = await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().NotBeNull();
+        result.Error.Type.Should().Be(ErrorType.Validation);
+        result.Error.Message.Should().Be($"Text does not appear to be in {languageCode}");
+    }
+
+    [Fact]
+    public async Task ValidateTextInLanguageAsync_ShouldPassCorrectParametersToExternalService()
+    {
+        // Arrange
+        var languageCode = LanguageCode.German;
+        var text = "Guten Tag";
+        var cancellationToken = new CancellationToken();
+
+        _germanStrategy.ValidateTextInLanguageAsync(languageCode, text, cancellationToken)
+            .Returns(Result.Success());
+        _externalLanguageValidationService.ValidateTextAsync(languageCode, text, cancellationToken)
+            .Returns(Result<ValidationResponse>.Success(new ValidationResponse(true)));
+
+        // Act
+        await _service.ValidateTextInLanguageAsync(languageCode, text, cancellationToken);
+
+        // Assert
+        await _externalLanguageValidationService.Received(1).ValidateTextAsync(languageCode, text, cancellationToken);
     }
 
     [Fact]
