@@ -1,11 +1,9 @@
 ﻿using Application.Shared.Interfaces;
 using Domain.Shared.Events;
+using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Infrastructure.Shared.Events;
+namespace Worker.Services;
 
 public class IdempotencyService : IIdempotencyService
 {

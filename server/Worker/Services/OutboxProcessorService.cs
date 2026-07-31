@@ -1,10 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace Infrastructure.Shared.Events;
+namespace Worker.Services;
 
 /// <summary>
 /// Background service that polls the outbox table and dispatches them for processing

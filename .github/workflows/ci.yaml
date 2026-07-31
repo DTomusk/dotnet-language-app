@@ -35,5 +35,11 @@ jobs:
             - name: Build
               run: dotnet build ./server/server.slnx --configuration Release --no-restore --verbosity normal
 
-            - name: Test
+            - name: Test domain
               run: dotnet test ./server/Domain.UnitTests/Domain.UnitTests.csproj --configuration Release --no-build --verbosity normal
+
+            - name: Test application
+              run: dotnet test ./server/Application.UnitTests/Application.UnitTests.csproj --configuration Release --no-build --verbosity normal
+
+            - name: Test infrastructure
+              run: dotnet test ./server/Infrastructure.UnitTests/Infrastructure.UnitTests.csproj --configuration Release --no-build --verbosity normal

@@ -3,6 +3,7 @@ using Api.Shared.RateLimiting;
 using Api.Submissions.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Auth.IoC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -47,6 +48,8 @@ public static class Register
 
         // Rate limiting
         services.AddRateLimiter(options => options.ConfigureRateLimiting(configuration));
+
+        services.AddAuthInfrastructureServices(configuration);
 
         return services;
     }

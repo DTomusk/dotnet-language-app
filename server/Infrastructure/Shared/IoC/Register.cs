@@ -17,16 +17,7 @@ public static class Register
         });
 
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-
         services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
-        services.AddScoped<EventDispatcher, EventDispatcher>();
-        services.AddScoped<IIdempotencyService, IdempotencyService>();
-
-        // Automatically starts the outbox processor service when the application starts
-        // TODO: in a microservice architecture, each deployable would have its own published and outbox processor (rather than one central one)
-        services.Configure<OutboxProcessorOptions>(configuration.GetSection(OutboxProcessorOptions.SectionName));
-
-        services.AddHostedService<OutboxProcessorService>();
 
         return services;
     }

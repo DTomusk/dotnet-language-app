@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Shared.Events;
+﻿namespace Worker.Services;
 
 public class OutboxProcessorOptions
 {
