@@ -19,7 +19,7 @@ export default function RegistrationPage() {
     const onSubmit = async (formData: LoginSchema) => {
         const response = await mutation.mutateAsync(formData);
         await logIn(response.token);
-        navigate("/", { replace: true });
+        navigate("/intro", { replace: true });
     }
 
     return (
