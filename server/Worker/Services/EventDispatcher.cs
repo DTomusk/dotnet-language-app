@@ -2,11 +2,9 @@
 using Domain.Auth.Events;
 using Domain.LanguagePractice.Events;
 using Domain.Shared.Events;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace Infrastructure.Shared.Events;
+namespace Worker.Services;
 
 public class EventDispatcher
 {
@@ -96,5 +94,5 @@ public class EventDispatcher
                 throw;
             }
         }
-    }   
+    }
 }

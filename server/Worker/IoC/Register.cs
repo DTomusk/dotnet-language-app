@@ -1,5 +1,5 @@
 ﻿using Application.Shared.Interfaces;
-using Infrastructure.Shared.Events;
+using Worker.Services;
 
 namespace Worker.IoC;
 
@@ -10,6 +10,8 @@ public static class Register
         services.AddScoped<EventDispatcher, EventDispatcher>();
         services.AddScoped<IIdempotencyService, IdempotencyService>();
         services.Configure<OutboxProcessorOptions>(configuration.GetSection(OutboxProcessorOptions.SectionName));
+
+        services.AddHostedService<OutboxProcessorService>();
         return services;
     }
 }
