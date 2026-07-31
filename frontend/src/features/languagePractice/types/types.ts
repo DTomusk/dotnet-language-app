@@ -8,7 +8,7 @@ export type Language = {
 };
 
 export type SetLanguageRequest = {
-    language: string;
+    languageCode: string;
 };
 
 export type GetLanguageStatsResponse = {

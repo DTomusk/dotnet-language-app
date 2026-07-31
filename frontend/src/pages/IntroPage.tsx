@@ -4,11 +4,13 @@ import Spinner from "../components/Spinner";
 import Alert from "@mui/material/Alert";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function IntroPage() {
     const navigate = useNavigate();
     const { t } = useTranslation(["common"]);
     const {
+        activeLanguage,
         error,
         languageItems,
         selectedLanguage,
@@ -18,6 +20,12 @@ export default function IntroPage() {
         isLoadingLanguages,
         isSubmitting,
     } = useLanguageSelection();
+
+    useEffect(() => {
+        if (!isLoading && activeLanguage) {
+            navigate("/");
+        }
+    }, [isLoading, activeLanguage, navigate]);
 
     const onConfirmLanguage = async () => {
         await confirmLanguage();

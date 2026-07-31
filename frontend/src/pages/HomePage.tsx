@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguageStats } from "../features/languagePractice/hooks/useLanguageStats";
 
 export default function HomePage() {
-    const navigate = useNavigate();
-    
+    const navigate = useNavigate();    
     const { data: languageStats } = useLanguageStats();
 
     return (
