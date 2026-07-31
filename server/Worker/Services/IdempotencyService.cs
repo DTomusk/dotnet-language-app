@@ -1,9 +1,6 @@
 ﻿using Application.Shared.Interfaces;
 using Domain.Shared.Events;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Shared.Events;
 

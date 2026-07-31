@@ -32,7 +32,11 @@ public static class Register
         services.AddScoped<IQueryHandler<GetLemmaStatsQuery, IEnumerable<LemmaStatistic>>, GetUserLemmaStatsQueryHandler>();
         services.AddScoped<IQueryHandler<GetActiveLanguageStatsQuery, LanguageStatsResponse>, GetActiveLanguageStatsQueryHandler>();
         services.AddScoped<ILanguageValidationService, LanguageValidationService>();
+        return services;
+    }
 
+    public static IServiceCollection AddEventHandlers(this IServiceCollection services)
+    {
         services.AddScoped<IEventHandler<UserCreatedEvent>, UserCreatedEventHandler>();
         services.AddScoped<IEventHandler<LanguageSubmissionCreatedEvent>, SubmissionCreatedEventHandler>();
         services.AddScoped<IEventHandler<LanguageSubmissionAnalysedEvent>, SubmissionAnalysedEventHandler>();
